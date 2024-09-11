@@ -1,0 +1,160 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    line-height: 1.6;
+    color: #333
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+    background-color: #f4f4f4;
+    height: 92%;
+    /* Ocupa todo el alto disponible */
+}
+
+nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background-color: #4ca2ff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    height: 8%;
+    /* Posiciona el botón de ejecutar respecto al nav */
+}
+
+nav a {
+    display: block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #000000;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background-color: #008cff;
+}
+
+.explainer__container {
+    width: 20%;
+    min-width: 240px;
+    max-width: 50%;
+    background-color: #ffffff;
+    border-right: 1px solid #ddd;
+    padding: 1rem;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    resize: horizontal;
+    overflow-x: hidden;
+}
+
+
+.code__editor {
+    flex-grow: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f4f4;
+}
+
+#editor {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1rem;
+    resize: none;
+    height: 60%;
+    /* Desactiva la redimensión del textarea */
+}
+
+#run-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    position: absolute;
+    bottom: 35%;
+    right: 2rem;
+    
+}
+
+#run-button:hover {
+    background-color: #218838;
+}
+
+.exercise__number {
+    font-size: 1.1rem;
+    color: #6c757d; /* Mejor contraste */
+    margin-bottom: 0.5rem;
+    font-weight: 600; /* Negrita ligera para destacar más */
+}
+
+.exercise__title {
+    font-size: 1.75rem; /* Tamaño de fuente ligeramente mayor */
+    font-weight: bold;
+    margin-top: 0;
+    color: #343a40; /* Color más oscuro para mayor énfasis */
+    margin-bottom: 1rem; /* Espaciado mayor para separación */
+}
+
+.exercise__content {
+    background-color: #f8f9fa; /* Fondo claro para diferenciar la sección */
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.exercise__button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    text-decoration: none;
+}
+
+code {
+    display: flex;
+    flex-grow: 1;
+    overflow-y: auto;
+    height: 35%;
+}
+
+.output__area {
+    padding: 1rem;
+    flex-grow: 1;
+   
+}
+
+#language-select {
+    margin-top: 1rem;
+    position: absolute;
+    right: 2rem;
+    background-color: #6d6d6d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+}
+
+#language-select option {
+    background-color: #6d6d6d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+}

@@ -1,0 +1,55 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LeetCode{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <nav>
+        <a href="{{ url_for('exercise', exercise_id=1) }}" data-exercise="1">Ejercicio 1</a>
+        <a href="{{ url_for('exercise', exercise_id=2) }}" data-exercise="2">Ejercicio 2</a>
+        <a href="{{ url_for('exercise', exercise_id=3) }}" data-exercise="3">Ejercicio 3</a>
+    </nav>
+
+    <main>
+        <aside class="explainer__container">
+            <div class="explainer">
+                {% block explainer %}
+                <h1>Descripción del ejercicio</h1>
+                <p>Aquí va la descripción del ejercicio.</p>
+                {% endblock %}
+            </div>
+        </aside>
+
+        <section class="code__editor">
+            <textarea id="editor" placeholder="Escribe tu código aquí...">
+                {% block code %}
+                {% endblock %}
+            </textarea>
+
+            <select id="language-select">
+                <option value="python">Python</option>
+                <option value="java">Java</option>
+            </select>
+            
+            <button id="run-button">Ejecutar Código</button>
+            <Code>
+                <div class="output__area">
+                    <p class="output__message">>...</p>
+                </div>
+                
+            </Code>
+        </section>
+    </main>
+
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

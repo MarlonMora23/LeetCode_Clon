@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+Ejercicio 1 - LeetCode
+{% endblock %}
+
+{% block code %}
+def is_prime_number(n: int) -> bool:
+    """
+    Returns True if n is a prime number, False otherwise.
+    """
+    # your code goes here
+    return None
+{% endblock %}
+
+{% block explainer %}
+<section class="exercise__content">
+    <h2 class="exercise__number" data-exercise="1">Ejercicio 1</h2>
+    <h1 class="exercise__title">Determinar si un número es primo</h1>
+    <article class="exercise__description">
+        <p>Un número primo es un número natural que solo es divisible por 1 y por sí mismo.</p>
+        <p><strong>Ejemplo:</strong> 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, etc.</p>
+        <p>Escriba una función que determine si un número es primo o no. La función debe devolver <code>True</code> o
+            <code>False</code>.</p>
+        <br>
+        <p><strong>Input:</strong> [3, 4, 7, 10, 11, 12, 19, 20, 23, 24, 29, 33, 37]</p>
+        <p><strong>Output:</strong> [True, False, True, False, True, False, True, False, True, False, True, False, True]
+        </p>
+    </article>
+    <br>
+    <article class="metadata">
+        <h3>Restricciones:</h3>
+        <p><b>¿Se permite recursividad?</b> {{ 'Si' if metadata.allow_recursion else 'No' }}</p>
+        <p><b>Palabras clave no permitidas:</b> {{ ', '.join(metadata.disallowed_keywords) }}</p>
+    </article>
+    <br>
+    <a href="{{ url_for('exercise', exercise_id=2) }}" class="exercise__button">Siguiente ejercicio</a>
+</section>
+{% endblock %}
