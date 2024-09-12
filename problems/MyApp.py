@@ -9,6 +9,8 @@ import subprocess
 
 from flask import Response, jsonify
 
+from problems.i_problem import IProblem
+
 
 def is_problem_python_function_defined(
     local_vars: dict, expected_function_name: str
@@ -116,6 +118,8 @@ def is_problem_python_function_working(
     expected_function_name: str,
     test_list: list[int],
     test_function: callable,
+    target: any = None,
+    n_test_cases: int = 1,
 ) -> dict:
     """
     Tests if the specified Python function in `local_vars` works correctly.
@@ -124,19 +128,35 @@ def is_problem_python_function_working(
         local_vars: A dictionary containing the local variables of the function's scope.
         expected_function_name: The expected name of the function to be tested.
         test_list: A list of test values to be passed to the function.
+        target: An optional parameter that can be passed to the function if required.
 
     Returns:
         A dictionary containing the test results, including success status, expected and tested outputs, and feedback.
     """
 
-    expected_output: list = [test_function(test_number) for test_number in test_list]
+    # Adjust the expected output depending on whether a target is used
+    if target is not None:
+        expected_output: list = [
+            test_function(test_number, target) for test_number in test_list
+        ]
+    else:
+        expected_output: list = [
+            test_function(test_number) for test_number in test_list
+        ]
+
     tested_output: list[bool] = []
 
     try:
+        # Loop through the test cases
         for test_number in test_list:
-            result: bool = local_vars[expected_function_name](test_number)
+            # If a target is provided, pass it to the user's function
+            if target is not None:
+                result: bool = local_vars[expected_function_name](test_number, target)
+            else:
+                result: bool = local_vars[expected_function_name](test_number)
             tested_output.append(result)
 
+        # Compare the expected output with the tested output
         if expected_output != tested_output:
             return {
                 "result": "Failure",
@@ -161,11 +181,12 @@ def is_problem_python_function_working(
             "feedback": f"Error inesperado en la función {expected_function_name}: {str(e)}",
         }
 
+    # Return success if all outputs match
     return {
         "result": "Success",
         "expected_output": expected_output,
         "tested_output": tested_output,
-        "feedback": "La funcion retorna los valores esperados.",
+        "feedback": "La función retorna los valores esperados.",
     }
 
 
@@ -174,6 +195,8 @@ def is_problem_java_function_working(
     test_list: list[int],
     test_function: callable,
     temp_file_path: str,
+    target: any = None,
+    n_test_cases: int = 1,
 ) -> dict:
     """
     Tests if the specified Java function in a temp file works correctly.
@@ -186,10 +209,17 @@ def is_problem_java_function_working(
     Returns:
         A dictionary containing the test results, including success status, expected and tested outputs, and feedback.
     """
+    # Adjust the expected output depending on whether a target is used
+    if target is not None:
+        expected_output: list = [
+            test_function(test_number, target) for test_number in test_list
+        ]
 
-    expected_output: list[bool] = [
-        test_function(test_number) for test_number in test_list
-    ]
+    else:
+        expected_output: list = [
+            test_function(test_number) for test_number in test_list
+        ]
+
     tested_output: list[bool] = []
 
     try:
@@ -241,6 +271,8 @@ def test_problem_python(
     expected_function_name: str,
     test_list: list[int],
     test_function: callable,
+    target: any = None,
+    n_test_cases: int = 1,
 ) -> dict:
     """
     Tests a problem given the code, expected function name, and test list.
@@ -281,7 +313,7 @@ def test_problem_python(
 
     # Check if function is working
     result_dict: dict = is_problem_python_function_working(
-        local_vars, expected_function_name, test_list, test_function
+        local_vars, expected_function_name, test_list, test_function, target, n_test_cases
     )
 
     return result_dict
@@ -292,6 +324,8 @@ def test_problem_java(
     expected_function_name: str,
     test_list: list[int],
     test_function: callable,
+    target: any = None,
+    n_test_cases: int = 1,
 ) -> dict:
     """
     Tests if the specified Java function in `code` works correctly.
@@ -331,7 +365,7 @@ def test_problem_java(
 
         # Check if function is working
         result_dict: dict = is_problem_java_function_working(
-            expected_function_name, test_list, test_function, temp_file_path
+            expected_function_name, test_list, test_function, temp_file_path, target, n_test_cases
         )
 
         return result_dict
@@ -425,7 +459,9 @@ def test_problem_in(
     data: dict,
     test_function: callable,
     expected_function_name: str,
-    test_list: list[int],
+    test_list: list,
+    target: any,
+    n_test_cases: int,
     metadata: dict,
 ) -> tuple:
     """
@@ -454,7 +490,7 @@ def test_problem_in(
 
     test_function_name: str = f"test_problem_{language}"
     result_dict: dict = eval(test_function_name)(
-        data["code"], expected_function_name, test_list, test_function
+        data["code"], expected_function_name, test_list, test_function, target, n_test_cases
     )
 
     if result_dict["result"] == "Success":
@@ -467,54 +503,6 @@ def test_problem_in(
         return (
             jsonify_response(problem_id, language, result_dict),
             400,
-        )
-
-
-def test_problem(
-    data: dict,
-    test_list: list,
-    problem_id: int,
-    test_function: callable,
-    python_func_name: str,
-    java_func_name: str,
-) -> dict:
-    """
-    Tests a problem in a given language.
-
-    Args:
-        data: A dictionary containing the code to be tested and the language.
-        test_list: A list of test values to be passed to the function.
-        problem_id: The ID of the problem.
-
-    Returns:
-        A tuple containing the result of the test in JSON format and a status code.
-    """
-    metadata = get_metadata()
-
-    if data["language"] == "python":
-        expected_function_name: str = python_func_name
-
-        return test_problem_in(
-            language="python",
-            problem_id=problem_id,
-            data=data,
-            test_function=test_function,
-            expected_function_name=expected_function_name,
-            test_list=test_list,
-            metadata=metadata,
-        )
-
-    elif data["language"] == "java":
-        expected_function_name: str = java_func_name
-
-        return test_problem_in(
-            language="java",
-            problem_id=problem_id,
-            data=data,
-            test_function=test_function,
-            expected_function_name=expected_function_name,
-            test_list=test_list,
-            metadata=metadata,
         )
 
 
@@ -533,3 +521,35 @@ def get_metadata() -> dict:
         2: {"allow_recursion": False, "disallowed_keywords": ["while"]},
         3: {"allow_recursion": False, "disallowed_keywords": ["while"]},
     }
+
+
+def test_problem(problem: IProblem, data: dict) -> dict:
+    """
+    Tests a problem using the provided problem instance.
+
+    Args:
+        problem: An instance of IProblem implementing the specific test case.
+        data: A dictionary containing the code to be tested and the language.
+        problem_id: The ID of the problem.
+
+    Returns:
+        A tuple containing the result of the test in JSON format and a status code.
+    """
+    metadata = get_metadata()
+
+    if data["language"] == "python":
+        expected_function_name = problem.get_python_function_name()
+    elif data["language"] == "java":
+        expected_function_name = problem.get_java_function_name()
+
+    return test_problem_in(
+        language=data["language"],
+        problem_id=problem.get_problem_id(),
+        data=data,
+        test_function=problem.get_test_function(),
+        expected_function_name=expected_function_name,
+        test_list=problem.get_test_list(),
+        target=problem.get_target(),
+        n_test_cases=problem.get_n_test_cases(),
+        metadata=metadata,
+    )

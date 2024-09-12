@@ -1,5 +1,45 @@
 import re
 from problems.MyApp import test_problem
+from problems.i_problem import IProblem
+
+
+class Problem2(IProblem):
+    def get_problem_id(self) -> int:
+        return 2
+
+    def get_test_list(self) -> list[str]:
+        return [
+            # Valid passwords
+            "Password1!",
+            "Valid123$",
+            "Str0ngP@ssw0rd",
+            # Invalid passwords
+            "short1!",  # Less than 8 characters
+            "nouppercase1!",  # No uppercase letters
+            "NOLOWERCASE1!",  # No lowercase letters
+            "NoSpecial123",  # No special characters
+            "NoDigits!",  # No numbers
+            "",  # Empty password
+            "12345678",  # Only numbers, no letters or special characters
+            "abcdefgh",  # Only lowercase letters, no numbers or special characters
+            "ABCDEFGH",  # Only uppercase letters, no numbers or special characters
+            "!@#$%^&*()",
+        ]
+
+    def get_target(self) -> any:
+        return None  # No target required for password validation
+    
+    def get_n_test_cases(self) -> int:
+        return 1
+
+    def get_python_function_name(self) -> str:
+        return "validate_password"
+
+    def get_java_function_name(self) -> str:
+        return "validatePassword"
+
+    def get_test_function(self) -> callable:
+        return validate_password
 
 
 def validate_password(password: str) -> bool:
@@ -41,29 +81,5 @@ def test_problem_2(data: dict) -> tuple:
     Returns:
         A tuple containing the result of the test in JSON format and a status code.
     """
-    test_list: list[str] = [
-        # Casos exitosos
-        "Password1!",  # Cumple con todas las reglas
-        "Valid123$",  # Cumple con todas las reglas
-        "Str0ngP@ssw0rd",  # Cumple con todas las reglas
-        # Casos fallidos
-        "short1!",  # Menos de 8 caracteres
-        "nouppercase1!",  # Sin mayúsculas
-        "NOLOWERCASE1!",  # Sin minúsculas
-        "NoSpecial123",  # Sin caracteres especiales
-        "NoDigits!",  # Sin dígitos
-        "",  # Contrasena vacía
-        "12345678",  # Solo números, sin letras ni caracteres especiales
-        "abcdefgh",  # Solo letras minúsculas, sin números ni caracteres especiales
-        "ABCDEFGH",  # Solo letras mayúsculas, sin números ni caracteres especiales
-        "!@#$%^&*()",
-    ]
-
-    return test_problem(
-        data=data,
-        test_list=test_list,
-        problem_id=2,
-        test_function=validate_password,
-        python_func_name="validate_password",
-        java_func_name="validatePassword",
-    )
+    problem = Problem2()
+    return test_problem(problem, data)

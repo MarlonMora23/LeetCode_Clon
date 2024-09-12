@@ -1,4 +1,28 @@
 from problems.MyApp import test_problem
+from problems.i_problem import IProblem
+
+
+class Problem1(IProblem):
+    def get_problem_id(self) -> int:
+        return 1
+
+    def get_test_list(self) -> list:
+        return [3, 4, 7, 10, 11, 12, 19, 20, 23, 24, 29, 33, 37]
+
+    def get_target(self) -> any:
+        return None  # No target required for prime number check
+    
+    def get_n_test_cases(self) -> int:
+        return 1
+
+    def get_python_function_name(self) -> str:
+        return "is_prime_number"
+
+    def get_java_function_name(self) -> str:
+        return "isPrimeNumber"
+
+    def get_test_function(self) -> callable:
+        return is_prime_number
 
 
 def is_prime_number(n: int) -> bool:
@@ -28,13 +52,6 @@ def test_problem_1(data: dict) -> tuple:
     Returns:
         A tuple containing the result of the test in JSON format and a status code.
     """
-    test_list: list[int] = [3, 4, 7, 10, 11, 12, 19, 20, 23, 24, 29, 33, 37]
+    problem = Problem1()
+    return test_problem(problem, data)
 
-    return test_problem(
-        data=data,
-        test_list=test_list,
-        problem_id=1,
-        test_function=is_prime_number,
-        python_func_name="is_prime_number",
-        java_func_name="isPrimeNumber",
-    )

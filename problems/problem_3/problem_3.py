@@ -1,56 +1,63 @@
-from flask import jsonify
-
-from problems.MyApp import test_problem, get_metadata, validate_metadata
+from problems.MyApp import test_problem
 import random
+from typing import List, Tuple
+from problems.i_problem import IProblem
 
-def is_problem_3_python_function_working(local_vars: dict, test_list: list[int]) -> dict:
-    """
-    Tests if the specified Python function in local_vars works correctly for problem 3.
 
-    Args:
-        local_vars: A dictionary containing the local variables of the function's scope.
-        test_list: A list of test values to be passed to the function.
+class Problem3(IProblem):
+    def get_problem_id(self) -> int:
+        return 3
 
-    Returns:
-        A dictionary containing the test results, including success status, expected and tested outputs, and feedback.
-    """
-    try:
-        generator_instance = local_vars["Generator"]()
+    def get_test_list(self) -> list:
+        return [3, 4, 7, 10, 11, 12, 19, 20, 23, 24, 29, 33, 37]
 
-        numbers_in_array, numbers_not_in_array = generator_instance.search_number()
+    def get_target(self) -> any:
+        return 5
 
-        expected_in_array = [random.choice(array) for array in generator_instance.arrays_sum]
-        expected_not_in_array = []
-        for array in generator_instance.arrays_sum:
-            number_not_in = random.randint(0, 100)
+    def get_n_test_cases(self) -> int:
+        return 100
+
+    def get_python_function_name(self) -> str:
+        return "search_number"
+
+    def get_java_function_name(self) -> str:
+        return "searchNumber"
+
+    def get_test_function(self) -> callable:
+        return Generator().search_number
+
+
+class Generator:
+    def _init_(self):
+        # Initialize arrays with random numbers and compute cumulative sums
+        self.arrays: List[List[int]] = [
+            [random.randint(0, 100) for _ in range(10)] for _ in range(10)
+        ]
+        self.arrays_sum: List[List[int]] = [
+            self.cumulative_sum(array) for array in self.arrays
+        ]
+
+    def cumulative_sum(self, array: List[int]) -> List[int]:
+        cumulative_sum: List[int] = []
+        accumulator: int = 0
+        for num in array:
+            accumulator += num
+            cumulative_sum.append(accumulator)
+        return cumulative_sum
+
+    def search_number(self) -> Tuple[List[int], List[int]]:
+        numbers_in_array: List[int] = []
+        numbers_not_in_array: List[int] = []
+
+        for array in self.arrays_sum:
+            number_in: int = random.choice(array)
+            numbers_in_array.append(number_in)
+            number_not_in: int = random.randint(0, 100)
             while number_not_in in array:
                 number_not_in = random.randint(0, 100)
-            expected_not_in_array.append(number_not_in)
+            numbers_not_in_array.append(number_not_in)
 
-        if numbers_in_array == expected_in_array and numbers_not_in_array == expected_not_in_array:
-            return {
-                "result": "Success",
-                "expected_numbers_in_array": expected_in_array,
-                "tested_numbers_in_array": numbers_in_array,
-                "expected_numbers_not_in_array": expected_not_in_array,
-                "tested_numbers_not_in_array": numbers_not_in_array,
-                "feedback": "La función retorna los valores esperados."
-            }
-        else:
-            return {
-                "result": "Failure",
-                "expected_numbers_in_array": expected_in_array,
-                "tested_numbers_in_array": numbers_in_array,
-                "expected_numbers_not_in_array": expected_not_in_array,
-                "tested_numbers_not_in_array": numbers_not_in_array,
-                "feedback": "La función no retorna los valores esperados."
-            }
-
-    except Exception as e:
-        return {
-            "result": "Failure",
-            "feedback": f"Error inesperado en la función: {str(e)}"
-        }
+        return numbers_in_array, numbers_not_in_array
 
 
 def test_problem_3(data: dict) -> tuple:
@@ -63,35 +70,5 @@ def test_problem_3(data: dict) -> tuple:
     Returns:
         A tuple containing the result of the test in JSON format and a status code.
     """
-    test_list: list[int] = [2, 3, 23, 24, 34, 55, 59, 60, 70, 73]
-    metadata = get_metadata()
-
-    
-    result_metadata = validate_metadata(
-        code=data["code"],
-        metadata=metadata,
-        problem_number=3,
-        language=data["language"],
-        required_class="Generator"
-    )
-
-    if result_metadata["result"] == "Failure":
-        return jsonify(result_metadata), 400
-
-    if data["language"] == "python":
-       
-        result_dict = test_problem(
-            data=data,
-            test_list=test_list,
-            problem_id=3,
-            test_function=is_problem_3_python_function_working,
-            python_func_name="Generator",
-            java_func_name="Generator"
-        )
-
-        if result_dict["result"] == "Success":
-            return jsonify(result_dict), 201
-        else:
-            return jsonify(result_dict), 400
-
-    return jsonify({"error": "Language not supported"}), 400
+    problem = Problem3()
+    return test_problem(problem, data)

@@ -1,7 +1,4 @@
-// Load the initial code from the editor according to the selected language
-document.getElementById('language-select').addEventListener('change', function () {
-    const language = this.value;
-
+const display_initial_code_1 = (language) => {
     if (language === 'python') {
         document.getElementById('editor').value =
             `def is_prime_number(n: int) -> bool:
@@ -29,20 +26,102 @@ public class isPrimeNumber {
     }
 }
     `}
-})
+}
 
 
-// Run the code
-document.getElementById('run-button').addEventListener('click', function () {
+const display_initial_code_2 = (language) => {
+    if (language === 'python') {
+        document.getElementById('editor').value =
+            `def is_prime_number(n: int) -> bool:
+    """
+    Returns True if n is a prime number, False otherwise.
+    """
+    # your code goes here
+    return None
+    `}
+
+    if (language === 'java') {
+        document.getElementById('editor').value =
+            `package temp;
+
+public class isPrimeNumber {
+    public static void main(String[] args) {      
+        int n = Integer.parseInt(args[0]);        
+        boolean result = isPrimeNumber(n);
+        System.out.println(result);
+    }
+
+    public static boolean isPrimeNumber(int n) {
+        // Your code goes here
+        return false;
+    }
+}
+    `}
+}
+
+
+const display_initial_code_3 = (language) => {
+    if (language === 'python') {
+        document.getElementById('editor').value =
+            `def is_prime_number(n: int) -> bool:
+    """
+    Returns True if n is a prime number, False otherwise.
+    """
+    # your code goes here
+    return None
+    `}
+
+    if (language === 'java') {
+        document.getElementById('editor').value =
+            `package temp;
+
+public class isPrimeNumber {
+    public static void main(String[] args) {      
+        int n = Integer.parseInt(args[0]);        
+        boolean result = isPrimeNumber(n);
+        System.out.println(result);
+    }
+
+    public static boolean isPrimeNumber(int n) {
+        // Your code goes here
+        return false;
+    }
+}
+    `}
+}
+
+
+// Load the initial code from the editor according to the problem and the selected language
+const changeInitialCode = (language) => {
+    const problem_id = document.getElementById('exercise-number').getAttribute('data-exercise');
+    console.log('clieckeado')
+
+    if (problem_id == 1) {
+        display_initial_code_1(language)
+    }
+
+    if (problem_id == 2) {
+        display_initial_code_2(language)
+    }
+
+    if (problem_id == 3) {
+        display_initial_code_3(language)
+    }
+}
+
+
+
+const submit_code = () => {
+    // Get problem features
     const problem_id = document.getElementById('exercise-number').getAttribute('data-exercise');
     const language = document.querySelector('#language-select').value;
     const code = document.querySelector('#editor').value;
 
+    // Get the output area
     const output = document.querySelector('.output__area');
 
     output.innerHTML = 'Cargando...';
 
-    console.log(problem_id)
 
     // Send the code to the server as a POST request
     fetch('http://127.0.0.1:8080/submit', {
@@ -93,5 +172,25 @@ document.getElementById('run-button').addEventListener('click', function () {
         })
         .catch(error => {
             console.error('Error:', error);
+            output.innerHTML = 'Error: ' + error;
         });
-});
+}
+
+
+const run_app = () => {
+    const submit_button = document.getElementById('run-button');
+    const language_select = document.querySelector('#language-select')
+
+    // When the user clicks on the button, submit the code
+    submit_button.addEventListener('click', submit_code);
+
+    // When the user changes the language, change the initial code
+    language_select.addEventListener('change', function() {
+        const selected_language = language_select.value;
+        changeInitialCode(selected_language); 
+    });
+}
+
+document.addEventListener('DOMContentLoaded', run_app);
+
+
