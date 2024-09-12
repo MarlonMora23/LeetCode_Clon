@@ -4,6 +4,58 @@
 Ejercicio 2 - LeetCode
 {% endblock %}
 
+{% block code %}
+def validate_password(password: str) -> bool:
+    """
+    Validates if a given password meets the requirements specified in the problem's metadata.
+
+    Args:
+        password: The password to be tested.
+
+    Returns:
+        A boolean indicating whether the password is valid or not.
+    """
+    return None
+{% endblock %}
+
 {% block explainer %}
-<h2 class="exercise__number" id="exercise-number" data-exercise="2">Ejercicio 2</h2>
+<section class="exercise__content">
+    <h2 class="exercise__number" id="exercise-number" data-exercise="2">Ejercicio 2</h2>
+    <h1 class="exercise__title">Verificador de contraseña</h1>
+    <article class="exercise__description">
+        <p></p>
+        <p><strong>Ejemplo:</strong> Password1!, Valid123$, Str0ngP@ssw0rd, etc.</p>
+        <p>Escriba una función que valide una contraseña. La función debe devolver <code>True</code> o
+            <code>False</code>.</p>
+        <br>
+        <p><strong>Input:</strong> [
+            # Casos exitosos
+            Password1!,  
+            Valid123$,  
+            Str0ngP@ssw0rd,  
+            
+            # Casos fallidos
+
+            short1!,  
+            nouppercase1!, 
+            NOLOWERCASE1!,  
+            NoSpecial123",  
+            NoDigits!",  
+            "",   
+            12345678",  
+            abcdefgh",  
+            ABCDEFGH",  
+            !@#$%^&*()"]</p>
+        <p><strong>Output:</strong> [True, True, True, False, False, False, False, False, False, False, False, False, False]
+        </p>
+    </article>
+    <br>
+    <article class="metadata">
+        <h3>Restricciones:</h3>
+        <p><b>¿Se permite recursividad?</b> {{ 'Si' if metadata.allow_recursion else 'No' }}</p>
+        <p><b>Palabras clave no permitidas:</b> {{ ', '.join(metadata.disallowed_keywords) }}</p>
+    </article>
+    <br>
+    <a href="{{ url_for('exercise', exercise_id=2) }}" class="exercise__button">Siguiente ejercicio</a>
+</section>
 {% endblock %}

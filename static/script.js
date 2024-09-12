@@ -3,9 +3,18 @@ const display_initial_code_1 = (language) => {
         document.getElementById('editor').value =
             `def is_prime_number(n: int) -> bool:
     """
-    Returns True if n is a prime number, False otherwise.
+    Checks if a given number is a prime number.
+
+    Parameters
+    ----------
+    n : int
+        The number to be checked for primality.
+
+    Returns
+    -------
+    bool
+        True if the number is a prime number, False otherwise.
     """
-    # your code goes here
     return None
     `}
 
@@ -32,11 +41,16 @@ public class isPrimeNumber {
 const display_initial_code_2 = (language) => {
     if (language === 'python') {
         document.getElementById('editor').value =
-            `def is_prime_number(n: int) -> bool:
+            `def validate_password(password: str) -> bool:
     """
-    Returns True if n is a prime number, False otherwise.
+    Validates if a given password meets the requirements specified in the problem's metadata.
+
+    Args:
+        password: The password to be tested.
+
+    Returns:
+        A boolean indicating whether the password is valid or not.
     """
-    # your code goes here
     return None
     `}
 
@@ -44,14 +58,14 @@ const display_initial_code_2 = (language) => {
         document.getElementById('editor').value =
             `package temp;
 
-public class isPrimeNumber {
+public class validatePassword {
     public static void main(String[] args) {      
-        int n = Integer.parseInt(args[0]);        
-        boolean result = isPrimeNumber(n);
+        String n = String.valueOf(args[0]);        
+        boolean result = validatePassword(n);
         System.out.println(result);
     }
 
-    public static boolean isPrimeNumber(int n) {
+    public static boolean validatePassword(String n) {
         // Your code goes here
         return false;
     }
@@ -63,12 +77,23 @@ public class isPrimeNumber {
 const display_initial_code_3 = (language) => {
     if (language === 'python') {
         document.getElementById('editor').value =
-            `def is_prime_number(n: int) -> bool:
+            `def search_number(array: list, target: int):
     """
-    Returns True if n is a prime number, False otherwise.
+    Searches for a target in an array and returns True if found, False otherwise
+    
+    Parameters
+    ----------
+    array : list
+        The array to search in
+    target : int
+        The target to search for
+    
+    Returns
+    -------
+    bool
+        True if the target is found in the array, False otherwise
     """
-    # your code goes here
-    return None
+    return target in array
     `}
 
     if (language === 'java') {

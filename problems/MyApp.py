@@ -118,7 +118,7 @@ def is_problem_python_function_working(
     expected_function_name: str,
     test_list: list[int],
     test_function: callable,
-    target: any = None,
+    targets: list[any] = None,
     n_test_cases: int = 1,
 ) -> dict:
     """
@@ -128,65 +128,88 @@ def is_problem_python_function_working(
         local_vars: A dictionary containing the local variables of the function's scope.
         expected_function_name: The expected name of the function to be tested.
         test_list: A list of test values to be passed to the function.
-        target: An optional parameter that can be passed to the function if required.
+        targets: An optional list of parameters (like target values) to be passed to the function if required.
+        n_test_cases: Number of test cases to be executed.
 
     Returns:
         A dictionary containing the test results, including success status, expected and tested outputs, and feedback.
     """
 
-    # Adjust the expected output depending on whether a target is used
-    if target is not None:
-        expected_output: list = [
-            test_function(test_number, target) for test_number in test_list
-        ]
-    else:
-        expected_output: list = [
-            test_function(test_number) for test_number in test_list
-        ]
+    # Make sure the number of test cases matches the provided target list (if targets are provided)
+    if targets is None:
+        targets = [None] * n_test_cases  # If no targets are provided, set them to None
 
-    tested_output: list[bool] = []
+    if len(targets) != n_test_cases:
+        return {
+            "result": "Failure",
+            "feedback": "El número de objetivos (targets) no coincide con el número de casos de prueba.",
+        }
+
+    # Initialize results
+    all_expected_output = []
+    all_tested_output = []
 
     try:
-        # Loop through the test cases
-        for test_number in test_list:
-            # If a target is provided, pass it to the user's function
-            if target is not None:
-                result: bool = local_vars[expected_function_name](test_number, target)
-            else:
-                result: bool = local_vars[expected_function_name](test_number)
-            tested_output.append(result)
+        # Loop through each test case
+        for i in range(n_test_cases):
+            target = targets[i]
 
-        # Compare the expected output with the tested output
-        if expected_output != tested_output:
-            return {
-                "result": "Failure",
-                "expected_output": expected_output,
-                "tested_output": tested_output,
-                "feedback": "La función no retorna los valores esperados.",
-            }
+            # Determine the expected output for the current test case
+            if target is not None:
+                expected_output = [
+                    test_function(test_number, target) for test_number in test_list
+                ]
+
+            else:
+                expected_output = [
+                    test_function(test_number) for test_number in test_list
+                ]
+
+            all_expected_output.append(expected_output)
+
+            # Test the user's function with the provided target
+            tested_output = []
+            for test_number in test_list:
+                if target is not None:
+                    result = local_vars[expected_function_name](test_number, target)
+                else:
+                    result = local_vars[expected_function_name](test_number)
+                tested_output.append(result)
+
+            all_tested_output.append(tested_output)
+
+        # Compare the expected output with the tested output for all test cases
+        for i in range(n_test_cases):
+            if all_expected_output[i] != all_tested_output[i]:
+                return {
+                    "result": "Failure",
+                    "expected_output": all_expected_output,
+                    "tested_output": all_tested_output,
+                    "feedback": f"Falló en el caso de prueba {i + 1}. La función no retorna los valores esperados.",
+                }
 
     except (TypeError, ValueError) as e:
         return {
             "result": "Failure",
-            "expected_output": expected_output,
-            "tested_output": tested_output,
+            "expected_output": all_expected_output,
+            "tested_output": all_tested_output,
             "feedback": f"Error en la función {expected_function_name}: {str(e)}",
         }
 
     except Exception as e:
         return {
             "result": "Failure",
-            "expected_output": expected_output,
-            "tested_output": tested_output,
+            "expected_output": all_expected_output,
+            "tested_output": all_tested_output,
             "feedback": f"Error inesperado en la función {expected_function_name}: {str(e)}",
         }
 
-    # Return success if all outputs match
+    # Return success if all test cases passed
     return {
         "result": "Success",
-        "expected_output": expected_output,
-        "tested_output": tested_output,
-        "feedback": "La función retorna los valores esperados.",
+        "expected_output": all_expected_output,
+        "tested_output": all_tested_output,
+        "feedback": "La función retorna los valores esperados en todos los casos de prueba.",
     }
 
 
@@ -195,7 +218,7 @@ def is_problem_java_function_working(
     test_list: list[int],
     test_function: callable,
     temp_file_path: str,
-    target: any = None,
+    targets: list[any] = None,
     n_test_cases: int = 1,
 ) -> dict:
     """
@@ -205,64 +228,97 @@ def is_problem_java_function_working(
         expected_function_name: The expected name of the function to be tested.
         test_list: A list of test values to be passed to the function.
         temp_file_path: The path to the temp file containing the Java code.
+        targets: An optional list of target values to pass to the function for each test case.
+        n_test_cases: Number of test cases to execute.
 
     Returns:
         A dictionary containing the test results, including success status, expected and tested outputs, and feedback.
     """
-    # Adjust the expected output depending on whether a target is used
-    if target is not None:
-        expected_output: list = [
-            test_function(test_number, target) for test_number in test_list
-        ]
 
-    else:
-        expected_output: list = [
-            test_function(test_number) for test_number in test_list
-        ]
+    # Ensure targets list is valid
+    if targets is None:
+        targets = [None] * n_test_cases  # If no targets are provided, set them to None
 
-    tested_output: list[bool] = []
+    if len(targets) != n_test_cases:
+        return {
+            "result": "Failure",
+            "feedback": "El número de objetivos (targets) no coincide con el número de casos de prueba.",
+        }
+
+    all_expected_output = []
+    all_tested_output = []
 
     try:
-        for test_number in test_list:
+        for i in range(n_test_cases):
+            target = targets[i]
 
-            # Execute the code
-            run_process = subprocess.run(
-                ["java", temp_file_path, str(test_number)],
-                capture_output=True,
-                text=True,
-            )
-            result: str = run_process.stdout.strip()
-            tested_output.append(result == "true")
+            # Determine the expected output for the current test case
+            if target is not None:
+                expected_output = [
+                    test_function(test_number, target) for test_number in test_list
+                ]
+            else:
+                expected_output = [
+                    test_function(test_number) for test_number in test_list
+                ]
 
-        if expected_output != tested_output:
-            return {
-                "result": "Failure",
-                "expected_output": expected_output,
-                "tested_output": tested_output,
-                "feedback": "La función no retorna los valores esperados.",
-            }
+            all_expected_output.append(expected_output)
+
+            tested_output = []
+
+            # Execute the user's Java function for each test number in the test list
+            for test_number in test_list:
+                # Prepare the command for running the Java file, passing the test_number and target if applicable
+                if target is not None:
+                    run_process = subprocess.run(
+                        ["java", temp_file_path, str(test_number), str(target)],
+                        capture_output=True,
+                        text=True,
+                    )
+                else:
+                    run_process = subprocess.run(
+                        ["java", temp_file_path, str(test_number)],
+                        capture_output=True,
+                        text=True,
+                    )
+
+                result: str = run_process.stdout.strip()
+                tested_output.append(result == "true")
+
+            all_tested_output.append(tested_output)
+
+        # Compare expected and tested outputs for all cases
+        for i in range(n_test_cases):
+            if all_expected_output[i] != all_tested_output[i]:
+                return {
+                    "result": "Failure",
+                    "expected_output": all_expected_output,
+                    "tested_output": all_tested_output,
+                    "feedback": f"Falló en el caso de prueba {i + 1}. La función no retorna los valores esperados.",
+                }
 
     except (TypeError, ValueError) as e:
         return {
             "result": "Failure",
-            "expected_output": expected_output,
-            "tested_output": tested_output,
-            "feedback": f"Error de tipoen la función {expected_function_name}: {str(e)}",
+            "expected_output": all_expected_output,
+            "tested_output": all_tested_output,
+            "feedback": f"Error de tipo en la función {expected_function_name}: {str(e)}",
         }
 
     except Exception as e:
         return {
             "result": "Failure",
-            "expected_output": expected_output,
-            "tested_output": tested_output,
+            "expected_output": all_expected_output,
+            "tested_output": all_tested_output,
             "feedback": f"Error inesperado en la función {expected_function_name}: {str(e)}",
         }
 
+    # Return success if all test cases passed
     return {
         "result": "Success",
-        "expected_output": expected_output,
-        "tested_output": tested_output,
-        "feedback": "La funcion retorna los valores esperados.",
+        "expected_output": all_expected_output,
+        "tested_output": all_tested_output,
+        "feedback": "La función retorna los valores esperados en todos los casos de prueba.",
     }
 
 
@@ -303,7 +359,6 @@ def test_problem_python(
             "feedback": f"Error: Error inesperado: {str(e)}",
         }
 
-    print(expected_function_name)
     # Check if function is defined
     if not is_problem_python_function_defined(local_vars, expected_function_name):
         return {
@@ -313,7 +368,12 @@ def test_problem_python(
 
     # Check if function is working
     result_dict: dict = is_problem_python_function_working(
-        local_vars, expected_function_name, test_list, test_function, target, n_test_cases
+        local_vars,
+        expected_function_name,
+        test_list,
+        test_function,
+        target,
+        n_test_cases,
     )
 
     return result_dict
@@ -365,7 +425,12 @@ def test_problem_java(
 
         # Check if function is working
         result_dict: dict = is_problem_java_function_working(
-            expected_function_name, test_list, test_function, temp_file_path, target, n_test_cases
+            expected_function_name,
+            test_list,
+            test_function,
+            temp_file_path,
+            target,
+            n_test_cases,
         )
 
         return result_dict
@@ -490,7 +555,12 @@ def test_problem_in(
 
     test_function_name: str = f"test_problem_{language}"
     result_dict: dict = eval(test_function_name)(
-        data["code"], expected_function_name, test_list, test_function, target, n_test_cases
+        data["code"],
+        expected_function_name,
+        test_list,
+        test_function,
+        target,
+        n_test_cases,
     )
 
     if result_dict["result"] == "Success":

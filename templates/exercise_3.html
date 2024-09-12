@@ -5,7 +5,23 @@ Ejercicio 3 - LeetCode
 {% endblock %}
 
 {% block code %}
-
+def search_number(array: list, target: int):
+    """
+    Searches for a target in an array and returns True if found, False otherwise
+    
+    Parameters
+    ----------
+    array : list
+        The array to search in
+    target : int
+        The target to search for
+    
+    Returns
+    -------
+    bool
+        True if the target is found in the array, False otherwise
+    """
+    return target in array
 {% endblock %}
 
 {% block explainer %}
@@ -13,23 +29,19 @@ Ejercicio 3 - LeetCode
     <h2 class="exercise__number" id="exercise-number" data-exercise="3">Ejercicio 3</h2>
     <h1 class="exercise__title">Buscar Números en arreglos</h1>
     <article class="exercise__description">
-        <p>En este ejercicio, se te proporciona una clase <code>Generator</code> que genera 10 arreglos de números aleatorios.</p>
+        <p>En este ejercicio, tendras que hacer una busqueda binaria la cual debe buscar un numero en un arreglo.</p>
         <p>Tu tarea es implementar una función dentro de la clase que realice dos operaciones:</p>
         <ul>
-            <li>Buscar un número que ya esté presente en cada arreglo acumulado.</li>
-            <li>Buscar un número que no esté presente en cada arreglo acumulado.</li>
+            <li>Con busqueda binaria debe recorrer el arreglo y buscar un número que ya esté presente en el arreglo.</li>
         </ul>
         <br>
-        <p><strong>Input:</strong> Se generan automáticamente arreglos de números aleatorios.</p>
-        <p><strong>Output:</strong> Dos listas, una con los números que están en los arreglos y otra con los que no están.</p>
+        <p><strong>Ejmplo:</strong> Se generan automáticamente numero aletorios en un arreglo [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] la busqueda recorre todo el arreglo encuentra el numero y lo imprime.</p>
     </article>
     <br>
     <article class="metadata">
         <h3>Restricciones:</h3>
-        <p><b>¿Número de arreglos?</b> 10 arreglos generados aleatoriamente, cada uno con 10 números aleatorios.</p>
-        <p><b>¿Tamaño del rango de números aleatorios?</b> 0 a 100.</p>
         <p><b>¿Se permite recursividad?</b> {{ 'Si' if metadata.allow_recursion else 'No' }}</p>
-        <p><b>Palabras clave no permitidas:</b> {{ ', '.join(metadata.disallowed_keywords) }}</p>
+        <p><b>Palabras clave no permitidas:</b>N/A-</p>
     </article>
     <br>
 </section>
