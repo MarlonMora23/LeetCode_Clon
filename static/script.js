@@ -1,6 +1,6 @@
 // Load the initial code from the editor according to the selected language
 document.getElementById('language-select').addEventListener('change', function () {
-    let language = this.value;
+    const language = this.value;
 
     if (language === 'python') {
         document.getElementById('editor').value =
@@ -34,13 +34,15 @@ public class isPrimeNumber {
 
 // Run the code
 document.getElementById('run-button').addEventListener('click', function () {
-    let problem_id = document.querySelector('[data-exercise]').getAttribute('data-exercise');
-    let language = document.querySelector('#language-select').value;
-    let code = document.querySelector('#editor').value;
+    const problem_id = document.getElementById('exercise-number').getAttribute('data-exercise');
+    const language = document.querySelector('#language-select').value;
+    const code = document.querySelector('#editor').value;
 
-    let output = document.querySelector('.output__area');
+    const output = document.querySelector('.output__area');
 
     output.innerHTML = 'Cargando...';
+
+    console.log(problem_id)
 
     // Send the code to the server as a POST request
     fetch('http://127.0.0.1:8080/submit', {
@@ -57,25 +59,25 @@ document.getElementById('run-button').addEventListener('click', function () {
         .then(response => response.json())
         .then(data => {
             // Update the output area
-            let result = document.createElement('p');
+            const result = document.createElement('p');
             result.classList.add('output__message');
             result.innerHTML = `<b>Result:</b> ${data['result']}`;
 
-            let feedback = document.createElement('p');
+            const feedback = document.createElement('p');
             feedback.classList.add('output__message');
             feedback.innerHTML = `<b>Feedback:</b> ${data['feedback']}`;
 
-            let expectedOutputTitle = document.createElement('p');
+            const expectedOutputTitle = document.createElement('p');
             expectedOutputTitle.innerHTML = '<b>Expected Output:</b>';
 
-            let expectedOutput = document.createElement('p');
+            const expectedOutput = document.createElement('p');
             expectedOutput.classList.add('output__message');
             expectedOutput.textContent = data['expected_output'];
 
-            let testedOutputTitle = document.createElement('p');
+            const testedOutputTitle = document.createElement('p');
             testedOutputTitle.innerHTML = '<b>Tested Output:</b>';
 
-            let testedOutput = document.createElement('p');
+            const testedOutput = document.createElement('p');
             testedOutput.classList.add('output__message');
             testedOutput.textContent = data['tested_output'];
 

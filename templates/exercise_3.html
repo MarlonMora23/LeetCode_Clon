@@ -1,10 +1,36 @@
 {% extends "base.html" %}
 
 {% block title %}
-Ejercicio 2 - LeetCode
+Ejercicio 3 - LeetCode
+{% endblock %}
+
+{% block code %}
+
 {% endblock %}
 
 {% block explainer %}
-<h1>Ejercicio 2:</h1>
-<p>Escribe una función que </p>
+<section class="exercise__content">
+    <h2 class="exercise__number" id="exercise-number" data-exercise="3">Ejercicio 3</h2>
+    <h1 class="exercise__title">Buscar Números en arreglos</h1>
+    <article class="exercise__description">
+        <p>En este ejercicio, se te proporciona una clase <code>Generator</code> que genera 10 arreglos de números aleatorios.</p>
+        <p>Tu tarea es implementar una función dentro de la clase que realice dos operaciones:</p>
+        <ul>
+            <li>Buscar un número que ya esté presente en cada arreglo acumulado.</li>
+            <li>Buscar un número que no esté presente en cada arreglo acumulado.</li>
+        </ul>
+        <br>
+        <p><strong>Input:</strong> Se generan automáticamente arreglos de números aleatorios.</p>
+        <p><strong>Output:</strong> Dos listas, una con los números que están en los arreglos y otra con los que no están.</p>
+    </article>
+    <br>
+    <article class="metadata">
+        <h3>Restricciones:</h3>
+        <p><b>¿Número de arreglos?</b> 10 arreglos generados aleatoriamente, cada uno con 10 números aleatorios.</p>
+        <p><b>¿Tamaño del rango de números aleatorios?</b> 0 a 100.</p>
+        <p><b>¿Se permite recursividad?</b> {{ 'Si' if metadata.allow_recursion else 'No' }}</p>
+        <p><b>Palabras clave no permitidas:</b> {{ ', '.join(metadata.disallowed_keywords) }}</p>
+    </article>
+    <br>
+</section>
 {% endblock %}

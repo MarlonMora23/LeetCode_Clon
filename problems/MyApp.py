@@ -271,6 +271,7 @@ def test_problem_python(
             "feedback": f"Error: Error inesperado: {str(e)}",
         }
 
+    print(expected_function_name)
     # Check if function is defined
     if not is_problem_python_function_defined(local_vars, expected_function_name):
         return {
