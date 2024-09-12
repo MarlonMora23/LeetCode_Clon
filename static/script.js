@@ -16,7 +16,7 @@ document.getElementById('language-select').addEventListener('change', function (
         document.getElementById('editor').value =
             `package temp;
 
-public class PrimeCheck {
+public class isPrimeNumber {
     public static void main(String[] args) {      
         int n = Integer.parseInt(args[0]);        
         boolean result = isPrimeNumber(n);

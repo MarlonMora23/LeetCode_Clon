@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, jsonify
-from problems.problem_1.problem_1 import test_problem_1, get_metadata
+from flask import Flask, request, render_template,  jsonify, redirect, url_for
+from problems.MyApp import get_metadata
+from problems.problem_1.problem_1 import test_problem_1
 from problems.problem_2.problem_2 import test_problem_2
 from problems.problem_3.problem_3 import test_problem_3
 
@@ -81,7 +82,7 @@ def index():
 
     Returns a rendered HTML template for Exercise 1.
     """
-    return render_template("exercise_1.html")
+    return redirect(url_for('exercise', exercise_id=1))  # Redirect to Exercise 1 by default. 
 
 
 def main():
