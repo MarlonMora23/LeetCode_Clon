@@ -4,26 +4,6 @@
 Ejercicio 3 - LeetCode
 {% endblock %}
 
-{% block code %}
-def search_number(array: list, target: int):
-    """
-    Searches for a target in an array and returns True if found, False otherwise
-    
-    Parameters
-    ----------
-    array : list
-        The array to search in
-    target : int
-        The target to search for
-    
-    Returns
-    -------
-    bool
-        True if the target is found in the array, False otherwise
-    """
-    return target in array
-{% endblock %}
-
 {% block explainer %}
 <section class="exercise__content">
     <h2 class="exercise__number" id="exercise-number" data-exercise="3">Ejercicio 3</h2>
@@ -35,13 +15,16 @@ def search_number(array: list, target: int):
             <li>Con busqueda binaria debe recorrer el arreglo y buscar un número que ya esté presente en el arreglo.</li>
         </ul>
         <br>
-        <p><strong>Ejmplo:</strong> Se generan automáticamente numero aletorios en un arreglo [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] la busqueda recorre todo el arreglo encuentra el numero y lo imprime.</p>
+        <p><strong>Input:</strong>
+        <br>Arreglo: {{ problem.get_test_list() }}</p>
+        <p>Numeros a buscar: {{ problem.get_target() }}</p>
+        <p><strong>Output:</strong> {{ problem.get_expected_output() }}</p>
     </article>
     <br>
     <article class="metadata">
         <h3>Restricciones:</h3>
-        <p><b>¿Se permite recursividad?</b> {{ 'Si' if metadata.allow_recursion else 'No' }}</p>
-        <p><b>Palabras clave no permitidas:</b>N/A-</p>
+        <p><b>¿Se permite recursividad?</b> {{ 'Si' if problem.get_metadata().allow_recursion else 'No' }}</p>
+        <p><b>Palabras clave no permitidas:</b> {{ ', '.join(problem.get_metadata().disallowed_keywords) }}</p>
     </article>
     <br>
 </section>

@@ -19,6 +19,7 @@
     <main>
         <aside class="explainer__container">
             <div class="explainer">
+                
                 {% block explainer %}
                 <h1>Descripción del ejercicio</h1>
                 <p>Aquí va la descripción del ejercicio.</p>
@@ -28,8 +29,11 @@
 
         <section class="code__editor">
             <textarea id="editor" placeholder="Escribe tu código aquí...">
-                {% block code %}
-                {% endblock %}
+                <pre>
+                    <code id="code">
+
+                    </code>
+                </pre>
             </textarea>
 
             <select id="language-select">
@@ -47,9 +51,17 @@
         </section>
     </main>
 
-
-
+    <script>
+        const initial_codes = {
+            python: `{{ problem.get_initial_python_code() | safe }}`,
+            java: `{{ problem.get_initial_java_code() | safe }}`
+        };
+    
+        
+    </script>
+    
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
 </body>
 
 </html>
