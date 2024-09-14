@@ -1,11 +1,24 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for
+"""
+Web app for testing exercises.
+
+This module contains the main web app for testing exercises. It uses Flask as the web server and
+defines routes for the home page, submitting code, and displaying exercises.
+
+The home page displays a link for each exercise. When a user clicks on a link, the user is taken
+to the page for that exercise. The page displays the problem statement, the user's code, and a
+submit button. When the user clicks the submit button, the app runs the user's code and displays
+the result of the test.
+
+The app also uses a problem solver module to run the user's code and check if the code is correct.
+"""
+import os
+from flask import Flask, session, request, render_template, jsonify, redirect, url_for
 from problem_solver.problems.problem_1 import Problem1
 from problem_solver.problems.problem_2 import Problem2
 from problem_solver.problems.problem_3 import Problem3
-from problem_solver.handle_user_submission import test_problem
 from problem_solver.user_submission import UserSubmission
-from flask import session
-import os
+from problem_solver.handle_user_submission import test_problem
+
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "una_clave_secreta_por_defecto")
@@ -74,7 +87,8 @@ def exercise(exercise_id):
         exercise_id: The id of the exercise to be displayed.
 
     Returns:
-        A rendered template with the exercise description, or a 404 error if the exercise_id is not valid.
+        A rendered template with the exercise description, 
+        or a 404 error if the exercise_id is not valid.
     """
     if exercise_id == 1:
         problem = Problem1()
@@ -94,8 +108,7 @@ def exercise(exercise_id):
 
         return render_template("exercise_3.html", problem=problem)
 
-    else:
-        return "Ejercicio no encontrado", 404
+    return "Ejercicio no encontrado", 404
 
 
 @app.route("/")

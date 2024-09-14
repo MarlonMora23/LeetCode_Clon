@@ -1,13 +1,19 @@
 """
-This module contains the UserSubmission class, which represents a user's submission to a problem. 
-This module also contains some abstracted functions to test Python and Java code.
+This module contains functions to test Python and Java code.
+
+The functions in this module are responsible for compiling and testing the code
+submitted by the user. The functions take an IProblem instance and a UserSubmission
+instance as parameters, and return a dictionary containing the result of the test
+in JSON format.
+
+The functions in this module are used by the main application to test code
+submitted by the user.
 """
 
 import ast
 import os
 import re
 import subprocess
-
 from flask import Response, jsonify
 from problem_solver.i_problem import IProblem
 from problem_solver.user_submission import UserSubmission
@@ -42,7 +48,7 @@ def is_problem_java_function_defined(file_path: str, function_name: str) -> bool
         A boolean indicating whether the function is defined or not.
     """
     try:
-        with open(f"{file_path}.java", "r") as file:
+        with open(f"{file_path}.java", "r", encoding="utf-8") as file:
             java_code: str = file.read()
 
             return (
@@ -115,7 +121,8 @@ def is_problem_function_working(
     Args:
         problem: An IProblem instance containing the code to be tested and the language.
         user_submission: An UserSubmission instance containing the user's code and the language.
-        user_code: The user's code to be tested. Could be a dictionary if the language is Python, or a string if the language is Java.
+        user_code: The user's code to be tested. Could be a dictionary if the language is Python,
+            or a string if the language is Java.
 
     Returns:
         A dictionary containing the result of the test in JSON format with the following keys:
@@ -125,9 +132,6 @@ def is_problem_function_working(
         - expected_output: list,  # Expected output
         - tested_output: list  # User's output
     """
-    language: str = user_submission.get_language()
-    function_name: str = getattr(problem, f"get_{language}_function_name")()
-
     try:
         all_expected_output: list = problem.get_expected_output()
         all_tested_output: list = problem.test_user_submission(
@@ -143,22 +147,31 @@ def is_problem_function_working(
                     "result": "Failure",
                     "expected_output": all_expected_output,
                     "tested_output": all_tested_output,
-                    "feedback": f"Falló en el caso de prueba {i + 1}. La función no retorna los valores esperados.",
+                    "feedback": f"Falló en el caso de prueba {i + 1}. " 
+                        + "La función no retorna los valores esperados.",
                 }
 
     except (TypeError, ValueError) as e:
         return {
             "result": "Failure",
-            "expected_output": all_expected_output if 'all_expected_output' in locals() else None,
-            "tested_output": all_tested_output if 'all_tested_output' in locals() else None,
+            "expected_output": (
+                all_expected_output if "all_expected_output" in locals() else None
+            ),
+            "tested_output": (
+                all_tested_output if "all_tested_output" in locals() else None
+            ),
             "feedback": f"Error de tipo en la función: {str(e)}",
         }
 
     except Exception as e:
         return {
             "result": "Failure",
-            "expected_output": all_expected_output if 'all_expected_output' in locals() else None,
-            "tested_output": all_tested_output if 'all_tested_output' in locals() else None,
+            "expected_output": (
+                all_expected_output if "all_expected_output" in locals() else None
+            ),
+            "tested_output": (
+                all_tested_output if "all_tested_output" in locals() else None
+            ),
             "feedback": f"Error en el código del usuario: {str(e)}",
         }
 
@@ -248,7 +261,7 @@ def compile_problem_java(
     java_code: str = user_submission.get_code()
 
     # Write the code to a temp file
-    with open(f"{temp_file_path}.java", "w") as file:
+    with open(f"{temp_file_path}.java", "w", encoding="utf-8") as file:
         file.write(java_code)
 
     # Check if function is defined
@@ -260,7 +273,7 @@ def compile_problem_java(
 
     # Compile the code
     compile_process = subprocess.run(
-        ["javac", f"{temp_file_path}.java"], capture_output=True
+        ["javac", f"{temp_file_path}.java"], capture_output=True, check=True
     )
 
     # Check if compilation has failed
@@ -299,8 +312,9 @@ def test_problem_java(problem: IProblem, user_submission: UserSubmission) -> dic
     function_name: str = problem.get_java_function_name()
     temp_file_path: str = f"temp/{function_name}"
 
-    
-    result = compile_problem_java(problem, user_submission, function_name, temp_file_path)
+    result = compile_problem_java(
+        problem, user_submission, function_name, temp_file_path
+    )
 
     # Delete the temp file and compiled class file
     try:
@@ -351,6 +365,8 @@ def validate_metadata(problem: IProblem, user_submission: UserSubmission) -> dic
         function_name: str = problem.get_java_function_name()
         return validate_recursion_java(code, is_allowed_recursion, function_name)
 
+    return {"result": "Failure", "feedback": "El lenguaje no es compatible."}
+
 
 def jsonify_response(user_submission: UserSubmission, result_dict: dict) -> Response:
     """
@@ -378,6 +394,17 @@ def jsonify_response(user_submission: UserSubmission, result_dict: dict) -> Resp
 
     return jsonify(result)
 
+def get_test_function_map() -> dict:
+    """
+    Returns a dictionary mapping the language name to the corresponding test function.
+
+    Returns:
+        dict: A dictionary mapping the language name to the corresponding test function.
+    """
+    return {
+        'python': test_problem_python,
+        'java': test_problem_java,
+    }
 
 def test_problem(problem: IProblem, user_submission: UserSubmission) -> tuple:
     """
@@ -400,22 +427,19 @@ def test_problem(problem: IProblem, user_submission: UserSubmission) -> tuple:
     """
 
     language: str = user_submission.get_language()
+    test_function_map: dict = get_test_function_map()
 
-    result_metadata = validate_metadata(problem, user_submission)
+    result_metadata: dict = validate_metadata(problem, user_submission)
 
     # Check if metadata validation has failed
     if result_metadata["result"] == "Failure":
         return jsonify_response(user_submission, result_metadata), 400
 
-    # Define test function
-    test_function_name: str = f"test_problem_{language}"
-
     # Evaluate test function
-    result_dict: dict = eval(test_function_name)(problem, user_submission)
+    result_dict: dict = test_function_map[language](problem, user_submission)
 
     # Return the jsonified response
     if result_dict["result"] == "Success":
         return jsonify_response(user_submission, result_dict), 201
 
-    if result_dict["result"] == "Failure":
-        return jsonify_response(user_submission, result_dict), 400
+    return jsonify_response(user_submission, result_dict), 400
