@@ -27,6 +27,35 @@ class IProblem(ABC):
             int: The id of the problem.
         """
         pass
+    
+    @abstractmethod
+    def get_problem_name(self) -> str:
+        """
+        Returns the name of the problem.
+
+        Returns:
+            str: The name of the problem.
+        """
+        pass
+    
+    @abstractmethod
+    def get_problem_description(self) -> str:
+        """
+        Returns the description of the problem.
+
+        Returns:
+            str: The description of the problem.
+        """
+        pass
+
+    def get_problem_difficulty(self) -> str:
+        """
+        Returns the difficulty of the problem.
+
+        Returns:
+            str: The difficulty of the problem.
+        """
+        pass
 
     @abstractmethod
     def get_test_list(self) -> list:

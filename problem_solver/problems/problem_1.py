@@ -48,17 +48,34 @@ class Problem1(IProblem):
 
     def get_problem_id(self) -> int:
         """
-        Returns the id of the problem.
-
         Returns:
             int: The id of the problem.
         """
         return 1
+    
+    def get_problem_name(self) -> str:
+        """
+        Returns:
+            str: The name of the problem.
+        """
+        return "Prime number check"
+    
+    def get_problem_description(self) -> str:
+        """
+        Returns:
+            str: The description of the problem.
+        """
+        return "Write a function that determines if a number is prime or not. A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself."
 
+    def get_problem_difficulty(self) -> str:
+        """
+        Returns:
+            str: The difficulty of the problem.
+        """
+        return "easy"
+    
     def get_test_list(self) -> list:
         """
-        Returns a list of test cases for the problem.
-
         Returns:
             list: A list of test cases.
         """
@@ -72,7 +89,7 @@ class Problem1(IProblem):
         Returns:
             None: No target required for prime number check
         """
-        return None  # No target required for prime number check
+        return None 
 
     def get_expected_output(self) -> list:
         """
@@ -133,9 +150,6 @@ class Problem1(IProblem):
 
     def get_python_function_name(self) -> str:
         """
-        Returns the name of the function in the problem that is expected
-        to be implemented in Python.
-
         Returns:
             str: The name of the function in the problem that is expected
             to be implemented in Python.
@@ -144,9 +158,6 @@ class Problem1(IProblem):
 
     def get_java_function_name(self) -> str:
         """
-        Returns the name of the function in the problem that is expected
-        to be implemented in Java.
-
         Returns:
             str: The name of the function in the problem that is expected
             to be implemented in Java.

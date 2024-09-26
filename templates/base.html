@@ -6,15 +6,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LeetCode{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
-    <nav>
+    <header>
         <a href="{{ url_for('exercise', exercise_id=1) }}" data-exercise="1">Ejercicio 1</a>
         <a href="{{ url_for('exercise', exercise_id=2) }}" data-exercise="2">Ejercicio 2</a>
         <a href="{{ url_for('exercise', exercise_id=3) }}" data-exercise="3">Ejercicio 3</a>
-    </nav>
+    </header>
 
     <main>
         <aside class="explainer__container">
@@ -52,12 +58,11 @@
     </main>
 
     <script>
+        // Load the initial code from the editor according to the problem and the selected language
         const initial_codes = {
             python: `{{ problem.get_initial_python_code() | safe }}`,
             java: `{{ problem.get_initial_java_code() | safe }}`
         };
-    
-        
     </script>
     
     <script src="{{ url_for('static', filename='script.js') }}"></script>

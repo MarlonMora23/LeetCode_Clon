@@ -25,7 +25,5 @@ Ejercicio 2 - LeetCode
         <p><b>¿Se permite recursividad?</b> {{ 'Si' if problem.get_metadata().allow_recursion else 'No' }}</p>
         <p><b>Palabras clave no permitidas:</b> {{ ', '.join(problem.get_metadata().disallowed_keywords) }}</p>
     </article>
-    <br>
-    <a href="{{ url_for('exercise', exercise_id=2) }}" class="exercise__button">Siguiente ejercicio</a>
 </section>
 {% endblock %}

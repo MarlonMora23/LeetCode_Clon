@@ -52,6 +52,27 @@ class Problem3(IProblem):
         """
 
         return 3
+    
+    def get_problem_name(self) -> str:
+        """
+        Returns:
+            str: The name of the problem.
+        """
+        return "Search number"
+    
+    def get_problem_description(self) -> str:
+        """
+        Returns:
+            str: The description of the problem.
+        """
+        return "Write a function that searches for a target in an array and returns True if found, False otherwise."
+
+    def get_problem_difficulty(self) -> str:
+        """
+        Returns:
+            str: The difficulty of the problem.
+        """
+        return "easy-medium"
 
     def get_test_list(self) -> list:
         """
@@ -178,7 +199,7 @@ class Problem3(IProblem):
         Returns:
             dict: A dictionary containing the metadata about the problem.
         """
-        return {"allow_recursion": False, "disallowed_keywords": ["while"]}
+        return {"allow_recursion": False, "disallowed_keywords": ["__builtins__"]}
 
     def get_initial_python_code(self) -> str:
         """

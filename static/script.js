@@ -1,77 +1,42 @@
+const initializeCodeMirror = () => {
+    const editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+        lineNumbers: true,        
+        mode: "python",           
+        theme: "dracula",         
+        matchBrackets: true,      
+        autoCloseBrackets: true, 
+        tabSize: 4                
+    });
 
+     document.getElementById('language-select').addEventListener('change', function() {
+        const selectedLanguage = this.value;
+        const mode = selectedLanguage === 'python' ? 'python' : 'text/x-java'; 
+        editor.setOption("mode", mode);
+        change_initial_code(selectedLanguage); 
+    });
 
-
-const display_initial_code_3 = (language) => {
-    if (language === 'python') {
-        document.getElementById('editor').value =
-            `def search_number(array: list, target: int):
-    """
-    Searches for a target in an array and returns True if found, False otherwise
-    
-    Parameters
-    ----------
-    array : list
-        The array to search in
-    target : int
-        The target to search for
-    
-    Returns
-    -------
-    bool
-        True if the target is found in the array, False otherwise
-    """
-    return None
-    `}
-
-    if (language === 'java') {
-        document.getElementById('editor').value =
-            `package temp;
-
-public class searchNumber {
-    public static void main(String[] args) {
-        int[] array = new int[args[0].length()];
-        for (int i = 0; i < args[0].length(); i++) {
-            array[i] = Integer.parseInt(args[0].substring(i, i + 1));
-        }
-        int target = Integer.parseInt(args[1]);
-
-        System.out.println("Searching for " + target + " in " + array);
-
-        boolean result = searchNumber(array, target);
-        System.out.println(result);
-    }
-
-    public static boolean searchNumber(int[] array, int target) {
-        /**
-         * Searches for a target in an array and returns true if found, false otherwise
-         *
-         * @param array  The array to search in
-         * @param target The target to search for
-         * @return true if the target is found in the array, false otherwise
-         */
-        for (int num : array) {
-            if (num == target) {
-                return true;
-            }
-        }
-        return false;
-    }
-}   
-    `}
+    return editor;
 }
 
+
 const charge_initial_code = () => {
-    document.getElementById('editor').value = initial_codes['python'];
+    code = initial_codes['python'];
+    document.getElementById('editor').value = code;
+    editor.setValue(code);
 }
 
 // Load the initial code from the editor according to the problem and the selected language
 const change_initial_code = (language) => {
     if (language === 'python') {
+        code = initial_codes['python'];
         document.getElementById('editor').value = initial_codes['python'];
+        editor.setValue(code);
     }
 
     else if (language === 'java') {
+        code = initial_codes['java'];
         document.getElementById('editor').value = initial_codes['java'];
+        editor.setValue(code);
     }
 }
 
@@ -81,7 +46,7 @@ const submit_code = () => {
     // Get problem features
     const problem_id = document.getElementById('exercise-number').getAttribute('data-exercise');
     const language = document.querySelector('#language-select').value;
-    const code = document.querySelector('#editor').value;
+    const code = editor.getValue(); 
 
     // Get the output area
     const output = document.querySelector('.output__area');
@@ -145,19 +110,17 @@ const submit_code = () => {
 
 const run_app = () => {
     const submit_button = document.getElementById('run-button');
-    const language_select = document.querySelector('#language-select')
+    const language_select = document.querySelector('#language-select');
+    editor = initializeCodeMirror();
 
-    // Charge the initial code
-    charge_initial_code();
-
-    // When the user clicks on the button, submit the code
     submit_button.addEventListener('click', submit_code);
 
-    // When the user changes the language, change the initial code
-    language_select.addEventListener('change', function () {
+    language_select.addEventListener('change', function() {
         const selected_language = language_select.value;
         change_initial_code(selected_language);
     });
+
+    change_initial_code(language_select.value);
 }
 
 document.addEventListener('DOMContentLoaded', run_app);
