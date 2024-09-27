@@ -5,25 +5,27 @@ Ejercicio 2 - LeetCode
 {% endblock %}
 
 {% block explainer %}
-<section class="exercise__content">
-    <h2 class="exercise__number" id="exercise-number" data-exercise="2">Ejercicio 2</h2>
-    <h1 class="exercise__title">Verificador de contraseña</h1>
-    <article class="exercise__description">
-        <p></p>
-        <p><strong>Ejemplo:</strong> Password1!, Valid123$, Str0ngP@ssw0rd, etc.</p>
-        <p>Escriba una función que valide una contraseña. La función debe devolver <code>True</code> o
-            <code>False</code>. para cada caso de prueba.
-        </p>
-        <br>
-        <p><strong>Input:</strong> {{ problem.get_test_list() }}</p>
-        <p><strong>Output:</strong> {{ problem.get_expected_output() }}</p>
-        <br>
-    </article>
 
-    <article class="metadata">
-        <h3>Restricciones:</h3>
-        <p><b>¿Se permite recursividad?</b> {{ 'Si' if problem.get_metadata().allow_recursion else 'No' }}</p>
-        <p><b>Palabras clave no permitidas:</b> {{ ', '.join(problem.get_metadata().disallowed_keywords) }}</p>
-    </article>
-</section>
+<h2 class="exercise__number" id="exercise-number" data-exercise="2">Ejercicio 2</h2>
+<h1 class="exercise__title">Verificador de contraseña</h1>
+
+<article class="exercise__description">
+    <p>Una contraseña segura debe cumplir ciertos requisitos como longitud mínima, presencia de caracteres especiales, números y mayúsculas.</p>
+    <p><strong>Ejemplo:</strong> Password1!, Valid123$, Str0ngP@ssw0rd, etc.</p>
+    <p>Escriba una función que valide una contraseña. La función debe devolver <code>True</code> o <code>False</code> para cada caso de prueba.</p>
+</article>
+
+<article class="exercise__io">
+    <h3>Entradas y salidas:</h3>
+    <p><strong>Input:</strong> {{ problem.get_test_list() }}</p>
+    <p><strong>Output:</strong> {{ problem.get_expected_output() }}</p>
+</article>
+
+<article class="metadata">
+    <h3>Restricciones:</h3>
+    <p><b>¿Se permite recursividad?</b> {{ 'Si' if problem.get_metadata().allow_recursion else 'No' }}</p>
+    <p><b>Palabras clave no permitidas:</b> {{ ', '.join(problem.get_metadata().disallowed_keywords) }}</p>
+</article>
+
+
 {% endblock %}

@@ -49,7 +49,7 @@ const submit_code = () => {
     const code = editor.getValue(); 
 
     // Get the output area
-    const output = document.querySelector('.output__area');
+    const output = document.querySelector('.output__message');
 
     output.innerHTML = 'Cargando...';
 
@@ -70,25 +70,32 @@ const submit_code = () => {
         .then(data => {
             // Update the output area
             const result = document.createElement('p');
-            result.classList.add('output__message');
-            result.innerHTML = `<b>Result:</b> ${data['result']}`;
+            result.classList.add('output__line');
+
+            if (data['result'] === 'Success') {
+                result.classList.add('output__success');
+            } else {
+                result.classList.add('output__failure');
+            }
+            
+            result.innerHTML = `<b style="font-size: 1.2rem">${data['result']}</b> `;
 
             const feedback = document.createElement('p');
-            feedback.classList.add('output__message');
-            feedback.innerHTML = `<b>Feedback:</b> ${data['feedback']}`;
+            feedback.classList.add('output__line');
+            feedback.innerHTML = data['feedback'];
 
             const expectedOutputTitle = document.createElement('p');
-            expectedOutputTitle.innerHTML = '<b>Expected Output:</b>';
+            expectedOutputTitle.innerHTML = '<b style="font-size: 1rem">Expected Output:</b>';
 
             const expectedOutput = document.createElement('p');
-            expectedOutput.classList.add('output__message');
+            expectedOutput.classList.add('output__line');
             expectedOutput.textContent = data['expected_output'];
 
             const testedOutputTitle = document.createElement('p');
-            testedOutputTitle.innerHTML = '<b>Tested Output:</b>';
+            testedOutputTitle.innerHTML = '<b style="font-size: 1rem">Tested Output:</b>';
 
             const testedOutput = document.createElement('p');
-            testedOutput.classList.add('output__message');
+            testedOutput.classList.add('output__line');
             testedOutput.textContent = data['tested_output'];
 
             output.innerHTML = '';

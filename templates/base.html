@@ -16,46 +16,69 @@
 </head>
 
 <body>
-    <header>
-        <a href="{{ url_for('exercise', exercise_id=1) }}" data-exercise="1">Ejercicio 1</a>
-        <a href="{{ url_for('exercise', exercise_id=2) }}" data-exercise="2">Ejercicio 2</a>
-        <a href="{{ url_for('exercise', exercise_id=3) }}" data-exercise="3">Ejercicio 3</a>
-    </header>
+    <div class="container">
+        <header>
+            <h1>LeetCode Clone</h1>
+        </header>
 
-    <main>
-        <aside class="explainer__container">
-            <div class="explainer">
-                
-                {% block explainer %}
-                <h1>Descripción del ejercicio</h1>
-                <p>Aquí va la descripción del ejercicio.</p>
-                {% endblock %}
-            </div>
-        </aside>
+        <main>
+            <aside class="aside__container">
+                <div class="explainer__container">
+                    <div class="section__title">
+                        <p>Descripción</p>
+                    </div>
 
-        <section class="code__editor">
-            <textarea id="editor" placeholder="Escribe tu código aquí...">
-                <pre>
-                    <code id="code">
+                    <div class="explainer">
+                        {% block explainer %}
+                        <h1>Descripción del ejercicio</h1>
+                        <p>Aquí va la descripción del ejercicio.</p>
+                        {% endblock %}
+                    </div>
 
-                    </code>
-                </pre>
-            </textarea>
-
-            <select id="language-select">
-                <option value="python">Python</option>
-                <option value="java">Java</option>
-            </select>
-            
-            <button id="run-button">Ejecutar Código</button>
-            <Code>
-                <div class="output__area">
-                    <p class="output__message">>...</p>
+                    <div class="explainer__footer"></div>
                 </div>
-                
-            </Code>
-        </section>
-    </main>
+            </aside>
+
+            <section class="code__editor">
+                <div class="exercise__content">
+
+                    <div class="section__title">
+                        <p>Code</p>
+                    </div>
+
+                    <div class="languages__select">
+                        <select id="language-select">
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                        </select>
+                    </div>
+
+
+                    <textarea id="editor" placeholder="Escribe tu código aquí...">
+                        <pre>
+                            <code id="code">
+        
+                            </code>
+                        </pre>
+                    </textarea>
+
+                    <div class="submit__buttons">
+                        <button id="run-button">Ejecutar Código</button>
+                        <button id="submit-button">Enviar Código</button>
+                    </div>
+                </div>
+
+                <div class="output__area">
+                    <div class="section__title">
+                        <p>Test result</p>
+                    </div>
+                    <pre class="output__message">
+                    <!-- Output will be displayed here -->
+                    </pre>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script>
         // Load the initial code from the editor according to the problem and the selected language
@@ -64,9 +87,8 @@
             java: `{{ problem.get_initial_java_code() | safe }}`
         };
     </script>
-    
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    
 </body>
 
 </html>
