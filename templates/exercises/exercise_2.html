@@ -1,0 +1,73 @@
+{% extends "exercises/exercise_base.html" %}
+
+{% block title %}
+Ejercicio 2 - LeetCode
+{% endblock %}
+
+{% block problems_nav %}
+
+<a href="{{ url_for('exercise', exercise_id='1') }}">
+    <figure class="svg clickable">
+        <img src="{{ url_for('static', filename='images/left.svg') }}" alt="Ejercicio anterior">
+    </figure>
+</a>
+<a href="{{ url_for('exercise', exercise_id='3') }}">
+    <figure class="svg clickable">
+        <img src="{{ url_for('static', filename='images/right.svg') }}" alt="Ejercicio siguiente">
+    </figure>
+</a>
+
+{% endblock %}
+
+{% block explainer %}
+
+<h2 class="exercise__number" id="exercise-number" data-exercise="2">Ejercicio 2</h2>
+<h1 class="exercise__title">Verificador de contraseña</h1>
+
+<article class="exercise__description">
+    <p>Una contraseña segura debe cumplir ciertos requisitos como longitud mínima, presencia de caracteres especiales,
+        números y mayúsculas.</p>
+    <p><strong>Ejemplo:</strong> Password1!, Valid123$, Str0ngP@ssw0rd, etc.</p>
+    <p>Escriba una función que valide una contraseña. La función debe devolver <code>True</code> o <code>False</code>
+        para cada caso de prueba.</p>
+</article>
+
+<article class="exercise__io">
+    <h3>Entradas y salidas:</h3>
+    <p><strong>Input:</strong> {{ problem.get_test_list() }}</p>
+    <p><strong>Output:</strong> {{ problem.get_expected_output() }}</p>
+</article>
+
+<article class="metadata">
+    <h3>Restricciones:</h3>
+    <p><b>¿Se permite recursividad?</b> {{ 'Si' if problem.get_metadata().allow_recursion else 'No' }}</p>
+    <p><b>Palabras clave no permitidas:</b> {{ ', '.join(problem.get_metadata().disallowed_keywords) }}</p>
+</article>
+
+{% block initial_code %}
+    {% set ns = namespace(last_python_code=None, last_java_code=None) %}
+
+    {% if progress_list is defined and progress_list|length > 0 %}
+        {% for progress in progress_list %}
+            {% if progress.problem_id == 2 %}
+                {% if progress.language == 'python' %}
+                    {% set ns.last_python_code = progress.code %}
+                {% elif progress.language == 'java' %}
+                    {% set ns.last_java_code = progress.code %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <div 
+        id="initial-code-data" 
+        data-python="{{ problem.get_initial_python_code() | tojson | forceescape }}" 
+        data-java="{{ problem.get_initial_java_code() | tojson | forceescape }}"
+        data-last-python-code="{{ ns.last_python_code | tojson | forceescape }}" 
+        data-last-java-code="{{ ns.last_java_code | tojson | forceescape }}"
+    >   
+    </div>
+{% endblock %}
+
+
+{% endblock %}

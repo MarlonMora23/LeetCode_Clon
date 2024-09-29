@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LeetCode Clone</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_styles.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <a href="{{ url_for('home') }}">
+            <figure class="svg clickable">
+                <img src="{{ url_for('static', filename='images/home.svg') }}" alt="home">
+            </figure>
+        </a>
+
+        <a href="{{ url_for('register_form') }}" class="register__button">Registrarse</a>
+    </header>
+
+    <main>
+        <div class="register-container">
+            <h1>Iniciar Sesión</h1>
+
+            <form action="{{ url_for('login') }}" method="POST" id="login-form">
+                <!-- URL to redirect to after login -->
+                <input type="hidden" name="next_url" value="{{ next_url }}">
+
+                <!-- Form fields -->
+                <div class="form-group">
+                    <label for="username">Nombre de usuario</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <button type="submit">Ingresar</button>
+
+                <p>¿No tienes una cuenta? <a href="{{ url_for('register_form') }}">Registrarse</a></p>
+            </form>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='js/login_script.js') }}"></script>
+</body>
+
+</html>

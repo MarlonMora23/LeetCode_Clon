@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode Clone - Problem List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home_styles.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <div class="header__container">
+            <a href="{{ url_for('home') }}">
+                <figure class="svg clickable">
+                    <img src="{{ url_for('static', filename='images/home.svg') }}" alt="home">
+                </figure>
+            </a>
+
+            {% if session['username'] %}
+                <a href="{{ url_for('logout') }}" class="logout__button" id="logout-button">Logout</a>
+
+                <div class="session__container hidden">
+                    <a href="{{ url_for('login_form') }}" class="login__button">Iniciar sesión</a>
+                    <a href="{{ url_for('register_form') }}" class="register__button">Registrarse</a>
+                </div>
+
+            {% else %}
+                <a href="{{ url_for('logout') }}" class="logout__button hidden" id="logout-button">Logout</a>
+
+                <div class="session__container">
+                    <a href="{{ url_for('login_form') }}" class="login__button">Iniciar sesión</a>
+                    <a href="{{ url_for('register_form') }}" class="register__button">Registrarse</a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="header__absolute">
+            <h1>LeetCode Clone</h1>
+        </div>
+    </header>
+
+    <main>
+        <h2 style="text-align: center;">Available Problems</h2>
+        <section class="problems__container">
+            {% for problem in problems %}
+            <div class="problem">
+                <div class="problem-info"><strong>Problem:</strong> {{ problem.get_problem_id() }}</div>
+                <div class="problem-info"><strong>Problem Name:</strong> {{ problem.get_problem_name() }}</div>
+                <div class="problem-info"><strong>Description:</strong> {{ problem.get_problem_description() }}</div>
+                <div class="problem-info"><strong>Difficulty:</strong> {{ problem.get_problem_difficulty() }}</div>
+                <a href="{{ url_for('exercise', exercise_id=problem.get_problem_id()) }}" class="problem__button">Go to
+                    Problem</a>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/home_script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>

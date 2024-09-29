@@ -1,0 +1,73 @@
+{% extends "exercises/exercise_base.html" %}
+
+{% block title %}
+Ejercicio 3 - LeetCode
+{% endblock %}
+
+{% block problems_nav %}
+
+<a href="{{ url_for('exercise', exercise_id='2') }}">
+    <figure class="svg clickable">
+        <img src="{{ url_for('static', filename='images/left.svg') }}" alt="Ejercicio anterior">
+    </figure>
+</a>
+<a aria-disabled="true">
+    <figure class="svg disabled">
+        <img src="{{ url_for('static', filename='images/right.svg') }}" alt="Ejercicio siguiente">
+    </figure>
+</a>
+
+{% endblock %}
+
+{% block explainer %}
+
+<h2 class="exercise__number" id="exercise-number" data-exercise="3">Ejercicio 3</h2>
+<h1 class="exercise__title">Buscar Números en Arreglos</h1>
+
+<article class="exercise__description">
+    <p>En este ejercicio, tendrás que implementar una búsqueda binaria para encontrar un número en un arreglo.</p>
+    <p>Tu tarea es implementar una función dentro de la clase que realice las siguientes operaciones:</p>
+    <ul>
+        <li>Utilizar búsqueda binaria para recorrer el arreglo y buscar un número que ya esté presente en él.</li>
+    </ul>
+</article>
+
+<article class="exercise__io">
+    <h3>Entradas y salidas:</h3>
+    <p><strong>Input:</strong> Arreglo: {{ problem.get_test_list() }}</p>
+    <p>Números a buscar: {{ problem.get_target() }}</p>
+    <p><strong>Output:</strong> {{ problem.get_expected_output() }}</p>
+</article>
+
+<article class="metadata">
+    <h3>Restricciones:</h3>
+    <p><b>¿Se permite recursividad?</b> {{ 'Si' if problem.get_metadata().allow_recursion else 'No' }}</p>
+    <p><b>Palabras clave no permitidas:</b> {{ ', '.join(problem.get_metadata().disallowed_keywords) }}</p>
+</article>
+
+{% block initial_code %}
+    {% set ns = namespace(last_python_code=None, last_java_code=None) %}
+
+    {% if progress_list is defined and progress_list|length > 0 %}
+        {% for progress in progress_list %}
+            {% if progress.problem_id == 3 %}
+                {% if progress.language == 'python' %}
+                    {% set ns.last_python_code = progress.code %}
+                {% elif progress.language == 'java' %}
+                    {% set ns.last_java_code = progress.code %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <div 
+        id="initial-code-data" 
+        data-python="{{ problem.get_initial_python_code() | tojson | forceescape }}" 
+        data-java="{{ problem.get_initial_java_code() | tojson | forceescape }}"
+        data-last-python-code="{{ ns.last_python_code | tojson | forceescape }}" 
+        data-last-java-code="{{ ns.last_java_code | tojson | forceescape }}"
+    >   
+    </div>
+{% endblock %}
+
+{% endblock %}

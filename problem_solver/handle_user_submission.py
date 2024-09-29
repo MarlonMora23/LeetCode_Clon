@@ -79,11 +79,11 @@ def validate_recursion_python(code: str, is_allowed_recursion: bool) -> dict:
                 for child in ast.walk(node)
             ):
                 return {
-                    "result": "Failure",
+                    "result": "Fallo",
                     "feedback": "La función no debe usar recursión.",
                 }
 
-    return {"result": "Success"}
+    return {"result": "Exito"}
 
 
 def validate_recursion_java(
@@ -105,11 +105,11 @@ def validate_recursion_java(
 
         if len(matches) > 3:
             return {
-                "result": "Failure",
+                "result": "Fallo",
                 "feedback": "La función no debe usar recursión.",
             }
 
-    return {"result": "Success"}
+    return {"result": "Exito"}
 
 
 def is_problem_function_working(
@@ -127,7 +127,7 @@ def is_problem_function_working(
     Returns:
         A dictionary containing the result of the test in JSON format with the following keys:
 
-        - result: str,  # Success/Failure
+        - result: str,  # Exito/Fallo
         - feedback: str,  # Feedback for the user
         - expected_output: list,  # Expected output
         - tested_output: list  # User's output
@@ -144,7 +144,7 @@ def is_problem_function_working(
         ):
             if expected_output != tested_output:
                 return {
-                    "result": "Failure",
+                    "result": "Fallo",
                     "expected_output": all_expected_output,
                     "tested_output": all_tested_output,
                     "feedback": f"Falló en el caso de prueba {i + 1}. " 
@@ -153,7 +153,7 @@ def is_problem_function_working(
 
     except (TypeError, ValueError) as e:
         return {
-            "result": "Failure",
+            "result": "Fallo",
             "expected_output": (
                 all_expected_output if "all_expected_output" in locals() else None
             ),
@@ -165,7 +165,7 @@ def is_problem_function_working(
 
     except Exception as e:
         return {
-            "result": "Failure",
+            "result": "Fallo",
             "expected_output": (
                 all_expected_output if "all_expected_output" in locals() else None
             ),
@@ -177,7 +177,7 @@ def is_problem_function_working(
 
     # Return success if all test cases passed
     return {
-        "result": "Success",
+        "result": "Exito",
         "expected_output": all_expected_output,
         "tested_output": all_tested_output,
         "feedback": "La función retorna los valores esperados en todos los casos de prueba.",
@@ -194,7 +194,7 @@ def execute_problem_python(problem: IProblem, user_submission: UserSubmission) -
     Returns:
         A dictionary containing the result of the test in JSON format with the following keys:
 
-        - result: str,  # Success/Failure
+        - result: str,  # Exito/Fallo
         - feedback: str,  # Feedback for the user
         - expected_output: list,  # Expected output
         - tested_output: list  # User's output
@@ -209,7 +209,7 @@ def execute_problem_python(problem: IProblem, user_submission: UserSubmission) -
     # Check if function is defined
     if not is_problem_python_function_defined(local_vars, function_name):
         return {
-            "result": "Failure",
+            "result": "Fallo",
             "feedback": f"Error: La función {function_name} no existe.",
         }
 
@@ -227,7 +227,7 @@ def test_problem_python(problem: IProblem, user_submission: UserSubmission) -> d
     Returns:
         A dictionary containing the result of the test in JSON format with the following keys:
 
-        - result: str,  # Success/Failure
+        - result: str,  # Exito/Fallo
         - feedback: str,  # Feedback for the user
         - expected_output: list,  # Expected output
         - tested_output: list  # User's output
@@ -253,7 +253,7 @@ def compile_problem_java(
     Returns:
         A dictionary containing the result of the test in JSON format with the following keys:
 
-        - result: str,  # Success/Failure
+        - result: str,  # Exito/Fallo
         - feedback: str,  # Feedback for the user
         - expected_output: list,  # Expected output
         - tested_output: list  # User's output
@@ -267,7 +267,7 @@ def compile_problem_java(
     # Check if function is defined
     if not is_problem_java_function_defined(temp_file_path, function_name):
         return {
-            "result": "Failure",
+            "result": "Fallo",
             "feedback": f"La función {function_name} no existe.",
         }
 
@@ -279,7 +279,7 @@ def compile_problem_java(
     # Check if compilation has failed
     if compile_process.returncode != 0:
         return {
-            "result": "Failure",
+            "result": "Fallo",
             "feedback": compile_process.stderr.decode("utf-8"),
         }
 
@@ -298,7 +298,7 @@ def test_problem_java(problem: IProblem, user_submission: UserSubmission) -> dic
     Returns:
         A dictionary containing the result of the test in JSON format with the following keys:
 
-        - result: str,  # Success/Failure
+        - result: str,  # Exito/Fallo
         - feedback: str,  # Feedback for the user
         - expected_output: list,  # Expected output
         - tested_output: list  # User's output
@@ -338,7 +338,7 @@ def validate_metadata(problem: IProblem, user_submission: UserSubmission) -> dic
     Returns:
         A dictionary containing the result of the test in JSON format with the following keys:
 
-        - result: str,  # Success/Failure
+        - result: str,  # Exito/Fallo
         - feedback: str,  # Feedback for the user
         - expected_output: list,  # Expected output
         - tested_output: list  # User's output
@@ -353,7 +353,7 @@ def validate_metadata(problem: IProblem, user_submission: UserSubmission) -> dic
     for keyword in disallowed_keywords:
         if keyword in code:
             return {
-                "result": "Failure",
+                "result": "Fallo",
                 "feedback": "El código contiene palabras no permitidas.",
             }
 
@@ -365,7 +365,7 @@ def validate_metadata(problem: IProblem, user_submission: UserSubmission) -> dic
         function_name: str = problem.get_java_function_name()
         return validate_recursion_java(code, is_allowed_recursion, function_name)
 
-    return {"result": "Failure", "feedback": "El lenguaje no es compatible."}
+    return {"result": "Fallo", "feedback": "El lenguaje no es compatible."}
 
 
 def jsonify_response(user_submission: UserSubmission, result_dict: dict) -> Response:
@@ -418,7 +418,7 @@ def test_problem(problem: IProblem, user_submission: UserSubmission) -> tuple:
         A tuple containing a JSON Response object and a status code.
         The JSON Response object contains the result of the test with the following keys:
 
-        - result: str,  # Success/Failure
+        - result: str,  # Exito/Fallo
         - feedback: str,  # Feedback for the user
         - expected_output: list,  # Expected output
         - tested_output: list  # User's output
@@ -432,14 +432,14 @@ def test_problem(problem: IProblem, user_submission: UserSubmission) -> tuple:
     result_metadata: dict = validate_metadata(problem, user_submission)
 
     # Check if metadata validation has failed
-    if result_metadata["result"] == "Failure":
+    if result_metadata["result"] == "Fallo":
         return jsonify_response(user_submission, result_metadata), 400
 
     # Evaluate test function
     result_dict: dict = test_function_map[language](problem, user_submission)
 
     # Return the jsonified response
-    if result_dict["result"] == "Success":
+    if result_dict["result"] == "Exito":
         return jsonify_response(user_submission, result_dict), 201
 
     return jsonify_response(user_submission, result_dict), 400

@@ -1,0 +1,130 @@
+/* Elements styles */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Header styles */
+
+.header__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header {
+    background-color: #282c34;
+    color: white;
+    padding: 1rem 2rem;
+}
+
+header h1{
+    font-size: 1.5rem;
+}
+
+.header__absolute {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 1rem 0;
+}
+
+.svg {
+    height: 32px;
+    width: 32px;
+}
+
+.svg img {
+    height: 100%;
+    width: 100%;
+}
+
+.login__button {
+    border: 1px solid #007bff;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    text-decoration: none;
+}
+
+.login__button:hover {
+    border: 1px solid #0069d9;
+}
+
+.register__button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    text-decoration: none;
+}
+
+.register__button:hover {
+    background-color: #0069d9;
+}
+
+.logout__button {
+    border: 1px solid #b62828;
+    color: #b62828;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    text-decoration: none;
+}
+
+.logout__button:hover {
+    border: 1px solid #962020;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Problem card styles */
+
+.problems__container {
+    list-style-type: none;
+    padding: 0;
+    margin: 2rem auto;
+    max-width: 800px;
+}
+
+.problem {
+    background-color: white;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.problem__button {
+    display: inline-block;
+    margin-top: 0.5rem;
+    background-color: #434f5c;
+    padding: 0.5rem 1rem;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.problem__button:hover {
+    background-color: #343a40;
+}
+
+.problem-info {
+    margin-bottom: 0.5rem;
+}
+
