@@ -17,36 +17,45 @@
 
 <body>
     <div class="container">
-        <header>
+
+        <header class="header">
             <div class="header__container">
-                <a href="{{ url_for('home') }}">
-                    <figure class="svg">
-                        <img src="{{ url_for('static', filename='images/home.svg') }}" alt="home">
-                    </figure>
+                <a href="{{ url_for('home') }}" class="header__logo">
+                    <div class="header__logo-icon">
+                        <img src="{{ url_for('static', filename='images/home.svg') }}" 
+                             alt="home" 
+                             width="20" 
+                             height="20">
+                    </div>
+                    <span class="header__logo-text">LeetCode Clone</span>
                 </a>
 
+                <div class="problems__nav">
+                    {% block problems_nav %}
+                    {% endblock %}
+                </div>
+        
                 {% if session['username'] %}
-                <a href="{{ url_for('logout') }}" class="logout__button" id="logout-button">Logout</a>
-
-                <div class="session__container hidden">
-                    <a href="{{ url_for('login_form', next=request.path) }}" class="login__button">Iniciar sesión</a>
-                    <a href="{{ url_for('register_form', next=request.path) }}" class="register__button">Registrarse</a>
-                </div>
-
+                    <nav class="header__nav" aria-label="user menu">
+                        <span class="header__username">{{ session['username'] }}</span>
+                        <a href="{{ url_for('logout') }}" 
+                           class="header__button header__button--danger" 
+                           id="logout-button">
+                            Cerrar sesión
+                        </a>
+                    </nav>
                 {% else %}
-                <a href="{{ url_for('logout') }}" class="logout__button hidden" id="logout-button">Logout</a>
-
-                <div class="session__container">
-                    <a href="{{ url_for('login_form', next=request.path) }}" class="login__button">Iniciar sesión</a>
-                    <a href="{{ url_for('register_form', next=request.path) }}" class="register__button">Registrarse</a>
-                </div>
+                    <nav class="header__nav" aria-label="user menu">
+                        <a href="{{ url_for('login_form') }}" 
+                           class="header__button header__button--outline">
+                            Iniciar sesión
+                        </a>
+                        <a href="{{ url_for('register_form') }}" 
+                           class="header__button header__button--primary">
+                            Registrarse
+                        </a>
+                    </nav>
                 {% endif %}
-
-            </div>
-
-            <div class="problems__nav">
-                {% block problems_nav %}
-                {% endblock %}
             </div>
         </header>
 
@@ -74,8 +83,9 @@
                     <div class="section__title">
                         <p>Code</p>
 
-                        {% block solved_exercise %}
-                        {% endblock %}
+                        {% if problem.get_problem_id() in session["solved_problems"]%}
+                        <p style="color:green">Completado [✓]</p>
+                        {% endif %}
                     </div>
 
                     <div class="languages__select">
@@ -86,11 +96,11 @@
 
                         <div class="reload__buttons">
                             {% if session['username'] %}
-                                <button class="reload__last__button" id="reload-last-code-button">
-                                    <figure title="Cargar código anterior">
-                                        <img src="{{ url_for('static', filename='images/code.svg') }}" alt="reload code">
-                                    </figure>
-                                </button>
+                            <button class="reload__last__button" id="reload-last-code-button">
+                                <figure title="Cargar código anterior">
+                                    <img src="{{ url_for('static', filename='images/code.svg') }}" alt="reload code">
+                                </figure>
+                            </button>
                             {% endif %}
 
                             <button class="reload__initial__button" id="reload-initial-code-button">
@@ -134,7 +144,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='js/exercises_script.js') }}"></script>
-    
+
 </body>
 
 </html>

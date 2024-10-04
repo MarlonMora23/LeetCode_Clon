@@ -11,13 +11,25 @@ const logout = async (event) => {
         if (response.ok) {
             // Redirigir al home si la creación fue exitosa
             Swal.fire({
-                icon: 'success',
-                title: 'Cierre de sesión exitoso',
-                showConfirmButton: false,
-                timer: 1000
-            }).then(() => {
-                window.location.href = currentUrl;
-            })
+                icon: 'question',
+                title: '¿Deseas cerrar la sesión?',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Cierre de sesión exitoso',
+                        showConfirmButton: false,
+                        timer: 1000
+                    }).then(() => {
+                        window.location.href = currentUrl;
+                    })
+                }
+            });
 
         } else {
             const errorData = await response.json();

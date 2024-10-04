@@ -106,6 +106,19 @@ def get_problems_ids() -> list:
     return list(str(key) for key in get_problems().keys())
 
 
+def get_progress(user_progresses: list) -> list:
+    progress_list = []
+
+    for progress in user_progresses:
+        progress_list.append({
+            "problem_id": progress.problem_id,
+            "code": progress.code,
+            "language": progress.language,
+            "solved": progress.solved
+        })
+
+    return progress_list
+
 @app.route("/user/<int:user_id>/progress")
 def get_user_progress(user_id):
     """
@@ -252,6 +265,8 @@ def login():
     if user and user.check_password(data["password"]):
         session["user_id"] = user.user_id
         session["username"] = user.username
+        session['progress'] = get_progress(user.progresses)
+        session['solved_problems'] = [progress.problem_id for progress in user.progresses if progress.solved]
 
         next_url = data.get("next_url")
 
@@ -263,8 +278,7 @@ def login():
             200,
         )
 
-    else:
-        return jsonify({"message": "Usuario o contraseña incorrecta"}), 401
+    return jsonify({"message": "Usuario o contraseña incorrecta"}), 401
 
 
 @app.route("/logout", methods=["POST"])

@@ -19,22 +19,6 @@
 
 {% endblock %}
 
-{% block solved_exercise %}
-    {% if progress_list is defined and progress_list|length > 0 %}
-        {% set ns = namespace(is_solved=False) %}
-        {% for progress in progress_list %}
-            {% if progress.problem_id == 1 and progress.solved %}
-                {% set ns.is_solved = True %}
-            {% endif %}
-        {% endfor %}
-
-        {% if ns.is_solved %}
-            <p style="color:green">Completado [✓]</p>
-        {% endif %}
-    {% endif %}
-{% endblock %}
-
-
 {% block explainer %}
 
     <h2 class="exercise__number" id="exercise-number" data-exercise="1">Ejercicio 1</h2>
