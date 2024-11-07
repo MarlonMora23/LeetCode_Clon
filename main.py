@@ -110,14 +110,17 @@ def get_progress(user_progresses: list) -> list:
     progress_list = []
 
     for progress in user_progresses:
-        progress_list.append({
-            "problem_id": progress.problem_id,
-            "code": progress.code,
-            "language": progress.language,
-            "solved": progress.solved
-        })
+        progress_list.append(
+            {
+                "problem_id": progress.problem_id,
+                "code": progress.code,
+                "language": progress.language,
+                "solved": progress.solved,
+            }
+        )
 
     return progress_list
+
 
 @app.route("/user/<int:user_id>/progress")
 def get_user_progress(user_id):
@@ -141,7 +144,12 @@ def get_user_progress(user_id):
     # Obtener el progreso del usuario
     progress_list: list = Progress.query.filter_by(user_id=user_id).all()
     progress_data = [
-        {"problem_id": p.problem_id, "code": p.code, "solved": p.solved, "language": p.language}
+        {
+            "problem_id": p.problem_id,
+            "code": p.code,
+            "solved": p.solved,
+            "language": p.language,
+        }
         for p in progress_list
     ]
 
@@ -238,6 +246,7 @@ def login_form():
     :rtype: str
     """
     next_url = request.args.get("next")
+    print(next_url)
 
     return render_template("auth/login.html", next_url=next_url)
 
@@ -265,10 +274,13 @@ def login():
     if user and user.check_password(data["password"]):
         session["user_id"] = user.user_id
         session["username"] = user.username
-        session['progress'] = get_progress(user.progresses)
-        session['solved_problems'] = [progress.problem_id for progress in user.progresses if progress.solved]
+        session["progress"] = get_progress(user.progresses)
+        session["solved_problems"] = [
+            progress.problem_id for progress in user.progresses if progress.solved
+        ]
 
         next_url = data.get("next_url")
+        print(next_url)
 
         if next_url == "None":
             next_url = url_for("home")
@@ -289,7 +301,7 @@ def logout():
     Returns:
         A JSON response with a message indicating that the logout was successful.
     """
-    session.clear()  
+    session.clear()
     return jsonify({"message": "Logout successful"}), 200
 
 
@@ -340,7 +352,7 @@ def run_code(problem_id: int, code: str, language: str) -> tuple:
 
 
 @app.route("/run", methods=["POST"])
-def run() -> tuple:    
+def run() -> tuple:
     """
     Handles a POST request to /run, which should contain a JSON payload
     with the following structure:
@@ -420,7 +432,11 @@ def submit():
 
     # Update the user's progress
     new_progress = Progress(
-        user_id=user_id, problem_id=problem_id, code=code, solved=solved, language=language
+        user_id=user_id,
+        problem_id=problem_id,
+        code=code,
+        solved=solved,
+        language=language,
     )
     db.session.add(new_progress)
     db.session.commit()
@@ -441,6 +457,7 @@ def exercise(exercise_id):
         or a 404 error if the exercise_id is not valid.
     """
     problem = get_problem(exercise_id)
+    problems_length = get_number_of_problems()
     user_id = session.get("user_id")
     user = db.session.get(User, user_id)
 
@@ -454,12 +471,13 @@ def exercise(exercise_id):
             ).all()
 
             return render_template(
-                f"exercises/exercise_{exercise_id}.html", problem=problem, progress_list=progress_list
+                "exercises/exercise_base.html",
+                problem=problem,
+                progress_list=progress_list,
+                problems_length=problems_length,
             )
 
-        return render_template(
-            f"exercises/exercise_{exercise_id}.html", problem=problem
-        )
+        return render_template("exercises/exercise_base.html", problem=problem, problems_length=problems_length)
 
     return "Ejercicio no encontrado", 404
 

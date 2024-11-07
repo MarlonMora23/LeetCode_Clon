@@ -42,7 +42,7 @@ const initializeCodeMirror = () => {
 }
 
 // Load the initial code from the editor according to the problem and the selected language
-const change_initial_code = (selected_language) => {
+const change_initial_code = (editor, selected_language) => {
     const initial_codes = get_initial_codes();
     const last_codes = get_last_codes();
     const mode = selected_language === 'python' ? 'python' : 'text/x-java';
@@ -58,7 +58,7 @@ const change_initial_code = (selected_language) => {
     }
 }
 
-const reload_last_code = () => {
+const reload_last_code = (editor) => {
     if (get_last_codes()[document.querySelector('#language-select').value] === null) {
         Swal.fire({
             icon: 'error',
@@ -70,11 +70,15 @@ const reload_last_code = () => {
     }
 }
 
-const reload_initial_code = () => {
+const reload_initial_code = (editor) => {
     editor.setValue(get_initial_codes()[document.querySelector('#language-select').value]);
 }
 
-const run_code = (url) => {
+const change_codemirror_code = (editor, code) => {
+    editor.setValue(code);
+}
+
+const run_code = (url, editor) => {
     // Get problem features
     const problem_id = document.getElementById('exercise-number').getAttribute('data-exercise');
     const language = document.querySelector('#language-select').value;
@@ -201,22 +205,55 @@ const run_app = () => {
     const logout_button = document.getElementById('logout-button');
     const reload_initial_code_button = document.getElementById('reload-initial-code-button');
     const reload_last_code_button = document.getElementById('reload-last-code-button');
-    editor = initializeCodeMirror();
+    const description_btn = document.getElementById('description-btn');
+    const submissions_btn = document.getElementById('submissions-btn');
+    const problem_description = document.getElementById('problem-description');
+    const problem_submissions = document.getElementById('problem-submissions');
+    const submissions_btns = document.querySelectorAll('.submission-btn');
+    const editor = initializeCodeMirror();
+
+    description_btn.addEventListener('click', function () {
+        if (problem_description.classList.contains('hidden')) {
+            problem_description.classList.remove('hidden');
+            problem_submissions.classList.add('hidden');
+        }
+    });
+    
+    submissions_btn.addEventListener('click', function () {
+        if (problem_submissions.classList.contains('hidden')) {
+            problem_submissions.classList.remove('hidden');
+            problem_description.classList.add('hidden');
+        }
+    });
+
+    submissions_btns.forEach(button => {
+        button.addEventListener('click', () => {
+            const code = button.getAttribute('submission-code');
+            change_codemirror_code(editor, code);
+        });
+    });
 
     run_button.addEventListener('click', function () {
-        run_code('/run');
+        run_code('/run', editor);
     });
+
     submit_button.addEventListener('click', function () {
-        run_code('/submit');
+        run_code('/submit', editor);
     });
 
     language_select.addEventListener('change', function () {
         const selected_language = language_select.value;
-        change_initial_code(selected_language);
+        change_initial_code(editor, selected_language);
     });
 
-    reload_initial_code_button.addEventListener('click', reload_initial_code);
-    reload_last_code_button.addEventListener('click', reload_last_code);
+    reload_initial_code_button.addEventListener('click', function () {
+        reload_initial_code(editor);
+    });
+
+    reload_last_code_button.addEventListener('click', function () {
+        reload_last_code(editor);
+    });
+    
     logout_button.addEventListener('click', logout);
 }
 

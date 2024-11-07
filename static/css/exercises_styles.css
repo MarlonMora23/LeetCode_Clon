@@ -17,7 +17,19 @@
     --card-background: #ffffff;
     --text-primary: #1e293b;
     --text-secondary: #64748b;
+    --pill: #374453;
 }
+
+/* :root {
+    --editor-bg: #1e1e1e;
+    --editor-border: #2d2d2d;
+    --editor-text: #d4d4d4;
+    --sidebar-bg: #ffffff;
+    --success-color: #22c55e;
+    --warning-color: #eab308;
+    --primary-color: #2563eb;
+    --header-bg: #1e293b;
+  } */
 
 body {
     font-family: system-ui, -apple-system, sans-serif;
@@ -278,6 +290,7 @@ ul {
 .explainer__container {
     display: flex;
     flex-direction: column;
+    width: 100%;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: white;
@@ -408,11 +421,146 @@ ul {
 
 .section__title {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     background-color: var(--header-bg);
     border-radius: 8px 8px 0 0;
     color: white;
-    padding: 0.8rem 1rem;
+    padding: 0.4rem 0.4rem;
+}
+
+.section__title--pill {
+    background-color: transparent; 
+    border: none;                 
+    border-radius: 8px;
+    color: white;
+    padding: 0.5rem 0.8rem;
+    font-size: 16px;
+    cursor: pointer;              
+}
+
+.section__title--pill:focus {
+    outline: none;                
+}
+
+.section__title--pill:hover {
+    background-color: var(--pill);
+    cursor: pointer;
+}
+
+.submissions-list {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.submission-btn {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.submission-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary-color, #2563eb);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.submission-btn:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.submission-btn:hover::before {
+    opacity: 1;
+}
+
+.submission-btn p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary, #64748b);
+    font-size: 0.875rem;
+}
+
+.submission-btn p:first-child {
+    color: var(--text-primary, #1e293b);
+    font-weight: 500;
+}
+
+/* Badge para el estado */
+.submission-btn p:first-child::after {
+    content: attr(data-status);
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-left: auto;
+}
+
+.submission-btn[data-solved="true"] p:first-child::after {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    content: "Resuelto";
+}
+
+.submission-btn[data-solved="false"] p:first-child::after {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: #eab308;
+    content: "No resuelto";
+}
+
+/* Icono para el lenguaje */
+.submission-btn p:last-child::before {
+    content: "📝";
+    font-size: 1rem;
+}
+
+/* Estado sin submissions */
+.no-submissions {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary, #64748b);
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    border: 1px dashed #e2e8f0;
+}
+
+/* Mensaje de login requerido */
+.login-required {
+    text-align: center;
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    border: 1px dashed #e2e8f0;
+    color: var(--text-secondary, #64748b);
+}
+
+.login-required a {
+    color: var(--primary-color, #2563eb);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-required a:hover {
+    text-decoration: underline;
 }
 
 .languages__select {
@@ -479,6 +627,134 @@ ul {
 
 .CodeMirror-vscrollbar {
     scrollbar-color: #fff #282a36;
+}
+
+.example-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+}
+
+.example-box pre {
+    font-family: ui-monospace, monospace;
+    font-size: 0.875rem;
+    color: #334155;
+}
+
+.problem-layout {
+    display: flex;
+    height: calc(100vh - 64px);
+    /* Resta la altura del header */
+    background-color: #f8fafc;
+}
+
+/* Sidebar styles */
+.problem-sidebar {
+    width: 45%;
+    max-width: 800px;
+    min-width: 320px;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid #e2e8f0;
+}
+
+.problem-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.problem-content h4 {
+    color: var(--text-primary, #1e293b);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.problem-header {
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.problem-difficulty {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.problem-difficulty.easy {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #15803d;
+}
+
+.problem-difficulty.easy-medium {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: var(--warning-color);
+}
+
+.problem-difficulty.medium {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: #854d0e;
+}
+
+.problem-difficulty.medium-hard {
+    background-color: rgba(249, 115, 22, 0.1);
+    color: var(--warning-color);
+}
+
+.problem-difficulty.hard {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+}
+
+.problem-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.problem-metadata {
+    display: flex;
+    gap: 1rem;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.problem-description {
+    color: #334155;
+    line-height: 1.625;
+}
+
+.problem-section {
+    margin-bottom: 2rem;
+}
+
+.problem-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 1rem;
+}
+
+.output-success {
+    color: var(--success-color);
 }
 
 @media (max-width: 768px) {
