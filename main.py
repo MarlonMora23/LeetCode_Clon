@@ -141,7 +141,7 @@ def get_user_progress(user_id):
     if not user:
         return jsonify({"error": "Usuario no encontrado."}), 404
 
-    # Obtener el progreso del usuario
+    # Get user progress
     progress_list: list = Progress.query.filter_by(user_id=user_id).all()
     progress_data = [
         {

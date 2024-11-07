@@ -66,21 +66,21 @@ class Problem2(IProblem):
             int: The id of the problem.
         """
         return 2
-    
+
     def get_problem_name(self) -> str:
         """
         Returns:
             str: The name of the problem.
         """
         return "Validar contraseña"
-    
+
     def get_problem_description(self) -> str:
         """
         Returns:
             str: The description of the problem.
         """
-        return "Escribe una función que valide una contraseña. Una contraseña es valida si contiene al menos una letra mayúscula, al menos una letra minúscula, al menos un número y al menos un carácter especial."
-    
+        return "Escribe una función que valide una contraseña. Una contraseña es valida si contiene al menos una letra mayúscula, una letra minúscula, un número y un carácter especial."
+
     def get_problem_difficulty(self) -> str:
         """
         Returns:
@@ -226,7 +226,10 @@ class Problem2(IProblem):
             dict: A dictionary containing the metadata about the problem.
         """
 
-        return {"allow_recursion": False, "disallowed_keywords": ["__builtins__", "while"],}
+        return {
+            "allow_recursion": False,
+            "disallowed_keywords": ["__builtins__", "while"],
+        }
 
     def get_initial_python_code(self) -> str:
         """
