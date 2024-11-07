@@ -38,7 +38,6 @@ body {
 }
 
 .header__container {
-  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -214,6 +213,9 @@ body {
   border-radius: 2rem;
   font-size: 0.875rem;
   font-weight: 500;
+}
+
+.difficulty-badge::first-letter {
   text-transform: uppercase;
 }
 

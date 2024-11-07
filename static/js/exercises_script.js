@@ -19,6 +19,9 @@ const initializeCodeMirror = () => {
         lineNumbers: true,
         mode: "python",
         theme: "dracula",
+        indentUnit: 4,
+        indentWithTabs: true,
+        lineWrapping: true,
         matchBrackets: true,
         autoCloseBrackets: true,
         tabSize: 4
@@ -210,12 +213,16 @@ const run_app = () => {
     const problem_description = document.getElementById('problem-description');
     const problem_submissions = document.getElementById('problem-submissions');
     const submissions_btns = document.querySelectorAll('.submission-btn');
+    const description_title = document.getElementById('description-title');
+    const submissions_title = document.getElementById('submissions-title');
     const editor = initializeCodeMirror();
 
     description_btn.addEventListener('click', function () {
         if (problem_description.classList.contains('hidden')) {
             problem_description.classList.remove('hidden');
             problem_submissions.classList.add('hidden');
+            submissions_title.classList.add('faded');
+            description_title.classList.remove('faded');
         }
     });
     
@@ -223,12 +230,14 @@ const run_app = () => {
         if (problem_submissions.classList.contains('hidden')) {
             problem_submissions.classList.remove('hidden');
             problem_description.classList.add('hidden');
+            submissions_title.classList.remove('faded');
+            description_title.classList.add('faded');
         }
     });
 
     submissions_btns.forEach(button => {
         button.addEventListener('click', () => {
-            const code = button.getAttribute('submission-code');
+            const code = JSON.parse(button.getAttribute('submission-code'));
             change_codemirror_code(editor, code);
         });
     });

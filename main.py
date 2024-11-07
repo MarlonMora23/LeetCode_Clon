@@ -245,8 +245,8 @@ def login_form():
     :return: A rendered HTML template of the login form.
     :rtype: str
     """
-    next_url = request.args.get("next")
-    print(next_url)
+    # Get the next URL from the query string, defaulting to the home page
+    next_url = request.args.get("next", url_for("home"))
 
     return render_template("auth/login.html", next_url=next_url)
 
@@ -279,11 +279,8 @@ def login():
             progress.problem_id for progress in user.progresses if progress.solved
         ]
 
-        next_url = data.get("next_url")
-        print(next_url)
-
-        if next_url == "None":
-            next_url = url_for("home")
+        # Get the next URL from the query string, defaulting to the home page
+        next_url = data.get("next_url") or url_for("home")
 
         return (
             jsonify({"message": "Inicio de sesión con éxito", "redirect": next_url}),
@@ -441,6 +438,11 @@ def submit():
     db.session.add(new_progress)
     db.session.commit()
 
+    session["progress"] = get_progress(user.progresses)
+    session["solved_problems"] = [
+        progress.problem_id for progress in user.progresses if progress.solved
+    ]
+
     return response
 
 
@@ -477,7 +479,11 @@ def exercise(exercise_id):
                 problems_length=problems_length,
             )
 
-        return render_template("exercises/exercise_base.html", problem=problem, problems_length=problems_length)
+        return render_template(
+            "exercises/exercise_base.html",
+            problem=problem,
+            problems_length=problems_length,
+        )
 
     return "Ejercicio no encontrado", 404
 

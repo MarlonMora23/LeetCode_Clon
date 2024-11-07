@@ -58,15 +58,15 @@ class Problem3(IProblem):
         Returns:
             str: The name of the problem.
         """
-        return "Search number"
+        return "Buscar un número"
     
     def get_problem_description(self) -> str:
         """
         Returns:
             str: The description of the problem.
         """
-        return "Write a function that searches for a target in an array and returns True if found, False otherwise."
-
+        return "Escribe una función que busca un número en un arreglo y devuelve True si lo encuentra, False si no lo encuentra."
+    
     def get_problem_difficulty(self) -> str:
         """
         Returns:

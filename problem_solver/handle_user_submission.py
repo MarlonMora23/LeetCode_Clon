@@ -71,17 +71,23 @@ def validate_recursion_python(code: str, is_allowed_recursion: bool) -> dict:
         A dictionary containing the result of the test and some feedback if the test fails.
     """
     if not is_allowed_recursion:
-        tree = ast.parse(code)
+        try :
+            tree = ast.parse(code)
 
-        for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef) and any(
-                isinstance(child, ast.Call) and child.func.id == node.name
-                for child in ast.walk(node)
-            ):
-                return {
-                    "result": "Fallo",
-                    "feedback": "La función no debe usar recursión.",
-                }
+            for node in ast.walk(tree):
+                if isinstance(node, ast.FunctionDef) and any(
+                    isinstance(child, ast.Call) and child.func.id == node.name
+                    for child in ast.walk(node)
+                ):
+                    return {
+                        "result": "Fallo",
+                        "feedback": "La función no debe usar recursión.",
+                    }
+        except Exception as e:
+            return {
+                "result": "Fallo",
+                "feedback": str(e),
+            }
 
     return {"result": "Exito"}
 

@@ -30,47 +30,47 @@
 
                 <div class="problems__nav">
                     {% if problem.get_problem_id() == 1 %}
-                        <!-- Previous button disabled for the first problem -->
-                        <a aria-disabled="true">
-                            <figure class="svg disabled">
-                                <img src="{{ url_for('static', filename='images/left.svg') }}" alt="Ejercicio anterior">
-                            </figure>
-                        </a>
-                        <!-- Next button enabled for the first problem -->
-                        <a href="{{ url_for('exercise', exercise_id=problem.get_problem_id() + 1) }}">
-                            <figure class="svg clickable">
-                                <img src="{{ url_for('static', filename='images/right.svg') }}" alt="Ejercicio siguiente">
-                            </figure>
-                        </a>
-                
+                    <!-- Previous button disabled for the first problem -->
+                    <a aria-disabled="true">
+                        <figure class="svg disabled">
+                            <img src="{{ url_for('static', filename='images/left.svg') }}" alt="Ejercicio anterior">
+                        </figure>
+                    </a>
+                    <!-- Next button enabled for the first problem -->
+                    <a href="{{ url_for('exercise', exercise_id=problem.get_problem_id() + 1) }}">
+                        <figure class="svg clickable">
+                            <img src="{{ url_for('static', filename='images/right.svg') }}" alt="Ejercicio siguiente">
+                        </figure>
+                    </a>
+
                     {% elif problem.get_problem_id() == problems_length %}
-                        <!-- Previous button enabled for the last problem -->
-                        <a href="{{ url_for('exercise', exercise_id=problem.get_problem_id() - 1) }}">
-                            <figure class="svg clickable">
-                                <img src="{{ url_for('static', filename='images/left.svg') }}" alt="Ejercicio anterior">
-                            </figure>
-                        </a>
-                        <!-- Next button disabled for the last problem -->
-                        <a aria-disabled="true">
-                            <figure class="svg disabled">
-                                <img src="{{ url_for('static', filename='images/right.svg') }}" alt="Ejercicio siguiente">
-                            </figure>
-                        </a>
-                
+                    <!-- Previous button enabled for the last problem -->
+                    <a href="{{ url_for('exercise', exercise_id=problem.get_problem_id() - 1) }}">
+                        <figure class="svg clickable">
+                            <img src="{{ url_for('static', filename='images/left.svg') }}" alt="Ejercicio anterior">
+                        </figure>
+                    </a>
+                    <!-- Next button disabled for the last problem -->
+                    <a aria-disabled="true">
+                        <figure class="svg disabled">
+                            <img src="{{ url_for('static', filename='images/right.svg') }}" alt="Ejercicio siguiente">
+                        </figure>
+                    </a>
+
                     {% else %}
-                        <!-- Both buttons enabled for all other problems -->
-                        <a href="{{ url_for('exercise', exercise_id=problem.get_problem_id() - 1) }}">
-                            <figure class="svg clickable">
-                                <img src="{{ url_for('static', filename='images/left.svg') }}" alt="Ejercicio anterior">
-                            </figure>
-                        </a>
-                        <a href="{{ url_for('exercise', exercise_id=problem.get_problem_id() + 1) }}">
-                            <figure class="svg clickable">
-                                <img src="{{ url_for('static', filename='images/right.svg') }}" alt="Ejercicio siguiente">
-                            </figure>
-                        </a>
+                    <!-- Both buttons enabled for all other problems -->
+                    <a href="{{ url_for('exercise', exercise_id=problem.get_problem_id() - 1) }}">
+                        <figure class="svg clickable">
+                            <img src="{{ url_for('static', filename='images/left.svg') }}" alt="Ejercicio anterior">
+                        </figure>
+                    </a>
+                    <a href="{{ url_for('exercise', exercise_id=problem.get_problem_id() + 1) }}">
+                        <figure class="svg clickable">
+                            <img src="{{ url_for('static', filename='images/right.svg') }}" alt="Ejercicio siguiente">
+                        </figure>
+                    </a>
                     {% endif %}
-                </div>                
+                </div>
 
                 {% if session['username'] %}
                 <nav class="header__nav" aria-label="user menu">
@@ -81,10 +81,12 @@
                 </nav>
                 {% else %}
                 <nav class="header__nav" aria-label="user menu">
-                    <a href="{{ url_for('login_form') }}" class="header__button header__button--outline">
+                    <a href="{{ url_for('login_form', next=request.path) }}"
+                        class="header__button header__button--outline">
                         Iniciar sesión
                     </a>
-                    <a href="{{ url_for('register_form') }}" class="header__button header__button--primary">
+                    <a href="{{ url_for('register_form', next=request.path) }}"
+                        class="header__button header__button--primary">
                         Registrarse
                     </a>
                 </nav>
@@ -97,10 +99,10 @@
                 <div class="explainer__container">
                     <div class="section__title">
                         <button class="section__title--pill" id="description-btn">
-                            <p>Descripción</p>
+                            <p id="description-title">Descripción</p>
                         </button>
                         <button class="section__title--pill" id="submissions-btn">
-                            <p>Envíos</p>
+                            <p id="submissions-title" class="faded">Envíos</p>
                         </button>
                     </div>
                     <div class="problem-content" id="problem-description">
@@ -128,10 +130,15 @@
                         <div class="problem-section">
                             <h2 class="problem-section-title">Ejemplos</h2>
                             <div class="example-box">
-                                <h3>Entrada:</h3>
-                                <pre>{{ problem.get_test_list() }}</pre>
-                                <h3>Salida esperada:</h3>
-                                <pre>{{ problem.get_expected_output() }}</pre>
+                                <div class="example-content">
+                                    <h3>Entrada:</h3>
+                                    <pre>{{ problem.get_test_list() }}</pre>
+                                    {% if problem.get_target() %}
+                                    <pre>{{ problem.get_target() }}</pre>
+                                    {% endif %}
+                                    <h3>Salida esperada:</h3>
+                                    <pre>{{ problem.get_expected_output() }}</pre>
+                                </div>
                             </div>
                         </div>
 
@@ -188,12 +195,12 @@
                             </button>
                             {% endif %}
                             {% endfor %}
-                            
+
                             {% if ns.is_empty %}
                             <div class="no-submissions">
                                 <p>Aún no has enviado ninguna solución para este problema</p>
                             </div>
-                            
+
                             {% endif %}
                         </div>
                         {% endif %}
@@ -202,40 +209,42 @@
             </aside>
 
             <section class="code__editor">
-                <div class="exercise__content">
+                <div class="exercise__content--container">
+                    <div class="exercise__content">
 
-                    <div class="section__title">
-                        <div class="section__title--pill">
-                            <p>Codigo</p>
+                        <div class="section__title">
+                            <div class="section__title--pill">
+                                <p>Codigo</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="languages__select">
-                        <select id="language-select">
-                            <option value="python">Python</option>
-                            <option value="java">Java</option>
-                        </select>
+                        <div class="languages__select">
+                            <select id="language-select">
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                            </select>
 
-                        <div class="reload__buttons">
-                            {% if session['username'] %}
-                            <button class="reload__last__button" id="reload-last-code-button">
-                                <figure title="Cargar código anterior">
-                                    <img src="{{ url_for('static', filename='images/code.svg') }}" alt="reload code">
-                                </figure>
-                            </button>
-                            {% endif %}
+                            <div class="reload__buttons">
+                                {% if session['username'] %}
+                                <button class="reload__last__button" id="reload-last-code-button">
+                                    <figure title="Cargar código anterior">
+                                        <img src="{{ url_for('static', filename='images/code.svg') }}"
+                                            alt="reload code">
+                                    </figure>
+                                </button>
+                                {% endif %}
 
-                            <button class="reload__initial__button" id="reload-initial-code-button">
-                                <figure title="Cargar código base">
-                                    <img src="{{ url_for('static', filename='images/reload.svg') }}" alt="reload code">
-                                </figure>
-                            </button>
+                                <button class="reload__initial__button" id="reload-initial-code-button">
+                                    <figure title="Cargar código base">
+                                        <img src="{{ url_for('static', filename='images/reload.svg') }}"
+                                            alt="reload code">
+                                    </figure>
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
 
-                    <textarea id="editor">
-
+                        <textarea id="editor">
 
                         <pre>
                             <code id="code">
@@ -244,9 +253,10 @@
                         </pre>
                     </textarea>
 
-                    <div class="submit__buttons">
-                        <button id="run-button">Ejecutar Código</button>
-                        <button id="submit-button">Enviar Código</button>
+                        <div class="submit__buttons">
+                            <button id="run-button">Ejecutar Código</button>
+                            <button id="submit-button">Enviar Código</button>
+                        </div>
                     </div>
                 </div>
 

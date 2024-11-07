@@ -72,14 +72,14 @@ class Problem2(IProblem):
         Returns:
             str: The name of the problem.
         """
-        return "Validate password"
+        return "Validar contraseña"
     
     def get_problem_description(self) -> str:
         """
         Returns:
             str: The description of the problem.
         """
-        return "Write a function that validates if a given password meets the requirements specified in the problem's metadata."
+        return "Escribe una función que valide una contraseña. Una contraseña es valida si contiene al menos una letra mayúscula, al menos una letra minúscula, al menos un número y al menos un carácter especial."
     
     def get_problem_difficulty(self) -> str:
         """

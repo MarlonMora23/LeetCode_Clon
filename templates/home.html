@@ -78,7 +78,7 @@
                         <h3>{{ problem.get_problem_name() }}</h3>
                         <span class="problem-id">#{{ problem.get_problem_id() }}</span>
                     </div>
-                    <span class="difficulty-badge {{ problem.get_problem_difficulty().lower() }}">
+                    <span class="difficulty-badge {{ problem.get_problem_difficulty() }}">
                         {{ problem.get_problem_difficulty() }}
                     </span>
                 </div>

@@ -58,14 +58,14 @@ class Problem1(IProblem):
         Returns:
             str: The name of the problem.
         """
-        return "Prime number check"
+        return "¿Es primo?"
     
     def get_problem_description(self) -> str:
         """
         Returns:
             str: The description of the problem.
         """
-        return "Write a function that determines if a number is prime or not. A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself."
+        return "Escribe una función que determina si un número es primo o no. Un número primo es un número natural mayor que 1 que no tiene divisores positivos otros que 1 y el mismo."
 
     def get_problem_difficulty(self) -> str:
         """
