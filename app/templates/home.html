@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode Clone - Problem List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home_styles.css') }}">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header__container">
+            <a href="{{ url_for('main.home') }}" class="header__logo">
+                <div class="header__logo-icon">
+                    <img src="{{ url_for('static', filename='images/home.svg') }}" 
+                         alt="home" 
+                         width="20" 
+                         height="20">
+                </div>
+                <span class="header__logo-text">LeetCode Clone</span>
+            </a>
+    
+            {% if session['username'] %}
+                <nav class="header__nav" aria-label="user menu">
+                    <span class="header__username">{{ session['username'] }}</span>
+                    <a href="{{ url_for('auth.logout') }}" 
+                       class="header__button header__button--danger" 
+                       id="logout-button">
+                        Cerrar sesión
+                    </a>
+                </nav>
+            {% else %}
+                <nav class="header__nav" aria-label="user menu">
+                    <a href="{{ url_for('auth.login_form') }}" 
+                       class="header__button header__button--outline">
+                        Iniciar sesión
+                    </a>
+                    <a href="{{ url_for('auth.register_form') }}" 
+                       class="header__button header__button--primary">
+                        Registrarse
+                    </a>
+                </nav>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="section-header">
+            <h2 class="section-title">Problemas disponibles</h2>
+            <div class="filters-container">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Buscar problemas...">
+                </div>
+                <button class="filter-button">
+                    <span>Dificultad</span>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <button class="filter-button">
+                    <span>Estado</span>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="problems-grid">
+            {% for problem in problems %}
+            {% set is_solved = problem.get_problem_id() in session["solved_problems"] %}
+            <div class="problem-card {% if is_solved %}solved{% endif %}">
+                <div class="card-header">
+                    <div class="problem-info">
+                        <h3>{{ problem.get_problem_name() }}</h3>
+                        <span class="problem-id">#{{ problem.get_problem_id() }}</span>
+                    </div>
+                    <span class="difficulty-badge {{ problem.get_problem_difficulty() }}">
+                        {{ problem.get_problem_difficulty() }}
+                    </span>
+                </div>
+                
+                <p class="problem-description">{{ problem.get_problem_description() }}</p>
+                
+                <div class="action-area">
+                    <a href="{{ url_for('user_submission.exercise', exercise_id=problem.get_problem_id()) }}" 
+                       class="solve-button {% if is_solved %}solved{% endif %}">
+                        {% if is_solved %}
+                            Ver solución
+                        {% else %}
+                            Resolver problema
+                        {% endif %}
+                    </a>
+                    
+                    {% if is_solved %}
+                    <span class="solved-badge">
+                        <svg viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Completado
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/home_script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>
