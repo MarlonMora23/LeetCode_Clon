@@ -185,7 +185,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-
+    padding: 0.3rem 0.5rem;
 }
 
 .reload__last__button,
@@ -581,7 +581,7 @@ ul {
     justify-content: space-between;
     align-items: center;
     background-color: #282a36;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem;
     border-bottom: 1px solid #454c52;
 }
 
@@ -600,6 +600,7 @@ ul {
     color: white;
     border: none;
     border-radius: 5px;
+    padding: 0.3rem 0.5rem;
 }
 
 #language-select:hover {

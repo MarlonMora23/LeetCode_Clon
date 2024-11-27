@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Any
-
+from contextlib import contextmanager
 from app.problem_solver.interfaces.i_problem import IProblem
 
 
@@ -18,3 +18,8 @@ class ILanguageHandler(ABC):
     @abstractmethod
     def execute(self, problem: "IProblem", *inputs) -> Any:
         pass
+
+    @abstractmethod
+    def cleanup_files(self) -> None:
+        """Optional: Removes temporary files created during execution."""
+        pass  # Empty for languages without temporary files

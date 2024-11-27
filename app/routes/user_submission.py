@@ -1,11 +1,9 @@
 from flask import Blueprint, jsonify, render_template, request, session
-from flask_sqlalchemy import SQLAlchemy
-from app.models import Database, Progress, User
+from app.models import Progress, User
 from app.utils import get_progress, run_code
-from flask_sqlalchemy import SQLAlchemy
 from app.models import Progress, User
 from app.models import db
-from app.utils import get_number_of_problems, get_problem
+from app.utils import get_number_of_problems, get_problem, get_supported_languages, get_language_codes
 
 
 user_submission_blueprint = Blueprint("user_submission", __name__)
@@ -24,6 +22,7 @@ def exercise(exercise_id):
     """
     problem = get_problem(exercise_id)
     has_target = hasattr(problem, "get_target")
+    supported_languages = get_supported_languages()
     problems_length = get_number_of_problems()
     user_id = session.get("user_id")
     user = db.session.get(User, user_id)
@@ -36,20 +35,34 @@ def exercise(exercise_id):
             progress_list = Progress.query.filter_by(
                 user_id=user.user_id, problem_id=exercise_id
             ).all()
+            last_codes = None
 
-            return render_template(
-                "exercises/exercise_base.html",
-                problem=problem,
-                has_target=has_target,
-                progress_list=progress_list,
-                problems_length=problems_length,
-            )
+            if progress_list:
+                last_codes = {}
+                for progress in progress_list:
+                    if progress.solved and problem.get_problem_id() == progress.problem_id:
+                        last_codes[progress.language] = progress.code
 
+                language_codes = get_language_codes(problem, last_codes)
+
+                return render_template(
+                    "exercises/exercise_base.html",
+                    problem=problem,
+                    has_target=has_target,
+                    progress_list=progress_list,
+                    problems_length=problems_length,
+                    language_codes=language_codes,
+                    supported_languages=supported_languages
+                )
+
+        language_codes = get_language_codes(problem)
         return render_template(
             "exercises/exercise_base.html",
             problem=problem,
             has_target=has_target,
             problems_length=problems_length,
+            language_codes=language_codes,
+            supported_languages=supported_languages
         )
 
     return "Ejercicio no encontrado", 404

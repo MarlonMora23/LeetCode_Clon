@@ -2,6 +2,7 @@ from typing import Any, Dict
 from flask import Response, jsonify
 from app.problem_solver.handlers.java_handler import JavaHandler
 from app.problem_solver.handlers.python_handler import PythonHandler
+from app.problem_solver.handlers.ruby_handler import RubyHandler
 from app.problem_solver.handlers.strategies.multi_input_strategy import MultiInputStrategy
 from app.problem_solver.handlers.strategies.single_input_strategy import SingleInputStrategy
 from app.problem_solver.interfaces.i_base_test_strategy import IBaseTestStrategy
@@ -16,7 +17,14 @@ class CodeTester:
     
     LANGUAGE_HANDLERS = {
         'python': PythonHandler,
-        'java': JavaHandler
+        'java': JavaHandler,
+        'ruby': RubyHandler
+    }
+
+    FUNCTION_MAP = {
+        'python': lambda problem: problem.get_python_function_name(),
+        'java': lambda problem: problem.get_java_function_name(),
+        'ruby': lambda problem: problem.get_ruby_function_name()
     }
     
     @classmethod
@@ -31,13 +39,13 @@ class CodeTester:
         
         if keyword_result:
             return cls._create_response(user_submission, keyword_result), 400
-            
-        recursion_result = validator.validate_recursion(
-            language,
-            problem.get_java_function_name() if language == "java" else ""
-        )
-        if recursion_result["result"] == "Fallo":
-            return cls._create_response(user_submission, recursion_result), 400
+        
+        # Validate language support
+        if language not in cls.FUNCTION_MAP:
+            return cls._create_response(user_submission, {
+                "result": "Fallo",
+                "feedback": "Lenguaje no soportado."
+            }), 400
         
         # Test the submission
         handler: ILanguageHandler = cls.LANGUAGE_HANDLERS[language](code)
@@ -45,6 +53,22 @@ class CodeTester:
 
         if test_submission_result["result"] == "Fallo":
             return cls._create_response(user_submission, test_submission_result), 400
+        
+        # Get the function name for the recursion validator
+        try:
+            get_function_name = cls.FUNCTION_MAP[language]
+            recursion_function_name = get_function_name(problem)
+            
+        except Exception as e:
+            return cls._create_response(user_submission, {
+                "result": "Fallo",
+                "feedback": f"Error al obtener la función para el lenguaje {language}: {str(e)}."
+            }), 500
+        
+        recursion_result = validator.validate_recursion(language, recursion_function_name)
+
+        if recursion_result["result"] == "Fallo":
+            return cls._create_response(user_submission, recursion_result), 400
         
         # Choose the strategy dynamically
         if hasattr(problem, "get_target"):
@@ -68,15 +92,15 @@ class CodeTester:
                 if expected != tested:
                     return {
                         "result": "Fallo",
-                        "expected_output": all_expected_output,
-                        "tested_output": all_tested_output,
+                        "expected_output": str(all_expected_output),
+                        "tested_output": str(all_tested_output),
                         "feedback": f"Falló en el caso de prueba {i + 1}. La función no retorna los valores esperados."
                     }
                     
             return {
                 "result": "Exito",
-                "expected_output": all_expected_output,
-                "tested_output": all_tested_output,
+                "expected_output": str(all_expected_output),
+                "tested_output": str(all_tested_output),
                 "feedback": "La función retorna los valores esperados en todos los casos de prueba."
             }
             

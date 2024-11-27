@@ -102,6 +102,18 @@ class IProblem(ABC):
         pass
 
     @abstractmethod
+    def get_ruby_function_name(self) -> str:
+        """
+        Returns the name of the function in the problem that is expected
+        to be implemented in Ruby.
+
+        Returns:
+            str: The name of the function in the problem that is expected
+            to be implemented in Ruby.
+        """
+        pass
+
+    @abstractmethod
     def get_test_function(self) -> callable:
         """
         Returns a function that tests if a given function is working correctly.
@@ -145,5 +157,55 @@ class IProblem(ABC):
 
         Returns:
             str: The initial Java code for the problem.
+        """
+        pass
+
+    @abstractmethod
+    def get_testing_java_code(self) -> str:
+        """
+        Returns the testing Java code for the problem.
+
+        Returns:
+            str: The testing Java code for the problem.
+        """
+        pass
+
+    @abstractmethod
+    def get_initial_ruby_code(self) -> str:
+        """
+        Returns the initial Ruby code for the problem.
+
+        Returns:
+            str: The initial Ruby code for the problem.
+        """
+        pass
+
+    @abstractmethod
+    def get_testing_ruby_code(self) -> str:
+        """
+        Returns the testing Ruby code for the problem.
+
+        Returns:
+            str: The testing Ruby code for the problem.
+        """
+        pass
+
+    @abstractmethod
+    def is_boolean(self) -> bool:
+        """
+        Returns whether the problem is a boolean problem.
+
+        Returns:
+            bool: True if the problem is a boolean problem, False otherwise.
+        """
+        pass
+
+    @abstractmethod
+    def is_integer(self) -> bool:
+        """
+        Returns whether the problem is an integer problem.
+
+        Returns:
+            bool: True if the problem is an integer problem, False otherwise.
         """
         pass

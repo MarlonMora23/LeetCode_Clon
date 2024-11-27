@@ -11,12 +11,20 @@ class PythonHandler(ILanguageHandler):
         self.local_vars: Dict[str, Any] = {}
 
     def is_function_defined(self, function_name: str) -> bool:
-        exec(self.code, {}, self.local_vars)
         return function_name in self.local_vars
 
     def test_submission(self, problem: "IProblem") -> Dict[str, Any]:
         function_name: str = problem.get_python_function_name()
 
+        try:
+            exec(self.code, {}, self.local_vars)
+            
+        except SyntaxError as e:
+            return {
+                "result": "Fallo",
+                "feedback": f"Error en el código del usuario: {str(e)}",
+            }
+        
         if not self.is_function_defined(function_name):
             return {
                 "result": "Fallo",
@@ -29,3 +37,7 @@ class PythonHandler(ILanguageHandler):
         """Executes the user code for Python with the given inputs."""
         user_function = self.local_vars[problem.get_python_function_name()]
         return user_function(*inputs)
+    
+    def cleanup_files(self):
+        """Python handler doesn't need to clean up any files."""
+        pass

@@ -1,9 +1,12 @@
+
 from flask import jsonify, session
-from app.problem_solver.handle_user_submission import test_problem
 from app.problem_solver.interfaces.i_problem import IProblem
 from app.problem_solver.problems.problem_1 import Problem1
 from app.problem_solver.problems.problem_2 import Problem2
 from app.problem_solver.problems.problem_3 import Problem3
+from app.problem_solver.problems.problem_4 import Problem4
+from app.problem_solver.problems.problem_5 import Problem5
+from app.problem_solver.problems.problem_6 import Problem6
 from app.problem_solver.models.user_submission import UserSubmission
 from app.problem_solver.testing.code_tester import CodeTester
 
@@ -28,7 +31,7 @@ def get_problems() -> dict:
     Returns:
         dict: A dictionary of IProblem instances.
     """
-    return {1: Problem1(), 2: Problem2(), 3: Problem3()}
+    return {1: Problem1(), 2: Problem2(), 3: Problem3(), 4: Problem4(), 5: Problem5(), 6: Problem6()}
 
 
 def get_problem(problem_id: int) -> IProblem:
@@ -116,3 +119,29 @@ def get_progress(user_progresses: list) -> list:
         )
 
     return progress_list
+
+def get_supported_languages() -> list[dict]:
+    """
+    Returns a list of supported languages with their respective metadata.
+    """
+    return [
+        {"name": "Python", "value": "python", "mode": "python"},
+        {"name": "Java", "value": "java", "mode": "text/x-java"},
+        {"name": "Ruby", "value": "ruby", "mode": "text/x-ruby"},
+    ]
+
+def get_language_codes(problem: IProblem, last_codes=None) -> dict[str, dict[str, str]]:
+    """
+    Returns initial and last codes for all supported languages.
+    """
+    supported_languages = get_supported_languages()  
+    last_codes = last_codes or {}
+
+    codes = {}
+    for lang in supported_languages:
+        codes[lang["value"]] = {
+            "initial": getattr(problem, f"get_initial_{lang['value']}_code")(),
+            "last": last_codes.get(lang["value"], None)
+        }
+    return codes
+

@@ -108,6 +108,17 @@ class Problem3(IProblem):
             to be implemented in Java.
         """
         return "searchNumber"
+    
+    def get_ruby_function_name(self):
+        """
+        Returns the name of the function in the problem that is expected
+        to be implemented in Ruby.
+
+        Returns:
+            str: The name of the function in the problem that is expected
+            to be implemented in Ruby.
+        """
+        return "search_number"
 
     def get_test_function(self) -> callable:
         """
@@ -164,21 +175,7 @@ class Problem3(IProblem):
         """
         return (
             "def search_number(array: list, target: int):\n"
-            '    """\n'
-            "    Searches for a target in an array and returns True if found, False otherwise\n"
-            "\n"
-            "    Parameters\n"
-            "    ----------\n"
-            "    array : list\n"
-            "        The array to search in\n"
-            "    target : int\n"
-            "        The target to search for\n"
-            "\n"
-            "    Returns\n"
-            "    -------\n"
-            "    bool\n"
-            "        True if the target is found in the array, False otherwise\n"
-            '    """\n'
+            "    # Your code goes here\n"
             "    return None\n"
         )
 
@@ -193,27 +190,55 @@ class Problem3(IProblem):
             str: The initial Java code for the problem.
         """
         return (
-            "package temp;\n\n"
+            "public static boolean searchNumber(int[] array, int target) {\n"
+            "    // Your code goes here\n"
+            "    return false;\n"
+            "}\n"
+        )
+    
+    def get_testing_java_code(self) -> str:
+        return (
+            "package app.temp;\n\n"
             "public class searchNumber {\n"
             "    public static void main(String[] args) {\n"
-            "        int[] array = new int[args.length - 1];\n\n"
-            "        for (int i = 0; i < args.length - 1; i++) {\n"
-            "            array[i] = Integer.parseInt(args[i]);\n"
+            "        String[] stringArray = args[0].split(\",\");\n"
+            "        int[] array = new int[stringArray.length];\n"
+            "        for (int i = 0; i < stringArray.length; i++) {\n"
+            "            array[i] = Integer.parseInt(stringArray[i]);\n"
             "        }\n\n"
-            "        int target = Integer.parseInt(args[args.length - 1]);\n"
+            "        int target = Integer.parseInt(args[1]);\n"
             "        boolean result = searchNumber(array, target);\n"
             "        System.out.println(result);\n"
             "    }\n\n"
-            "    public static boolean searchNumber(int[] array, int target) {\n"
-            "        /**\n"
-            "         * Searches for a target in an array and returns true if found, "
-            "          false otherwise\n"
-            "         *\n"
-            "         * @param array  The array to search in\n"
-            "         * @param target The target to search for\n"
-            "         * @return true if the target is found in the array, false otherwise\n"
-            "         */\n"
-            "        return false;\n"
-            "    }\n"
-            "}\n"
         )
+    
+    def get_initial_ruby_code(self) -> str:
+        """
+        Returns the initial Ruby code for the problem.
+
+        The initial code is a docstring with a description of the problem and
+        a function signature with a return type and parameters.
+
+        Returns:
+            str: The initial Ruby code for the problem.
+        """
+        return (
+            "def search_number(array, target)\n"
+            "    # Your code goes here\n"
+            "    return false\n"
+            "end\n"
+        )
+    
+    def get_testing_ruby_code(self) -> str:
+        return (
+            "array = ARGV[0].split(',').map(&:to_i)\n"
+            "target = ARGV[1].to_i\n"
+            "result = search_number(array, target)\n"
+            "puts result\n"
+        )
+    
+    def is_boolean(self):
+        return True
+    
+    def is_integer(self):
+        return False

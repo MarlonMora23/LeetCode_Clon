@@ -1,23 +1,60 @@
-const get_initial_codes = () => {
-    const codeDataElement = document.getElementById('initial-code-data');
-    return {
-        python: JSON.parse(codeDataElement.getAttribute('data-python')),
-        java: JSON.parse(codeDataElement.getAttribute('data-java')),
-    };
-}
+// Get the supported languages dynamically from the backend
+const getSupportedLanguages = () => {
+    const languageDataElement = document.getElementById('language-data');
+    return JSON.parse(languageDataElement.getAttribute('data-languages'));
+};
 
-const get_last_codes = () => {
-    const codeDataElement = document.getElementById('initial-code-data');
-    return {
-        python: JSON.parse(codeDataElement.getAttribute('data-last-python-code')),
-        java: JSON.parse(codeDataElement.getAttribute('data-last-java-code'))
-    };
-}
+// Initialize the language selector
+const initializeLanguageSelector = () => {
+    const languageSelect = document.getElementById('language-select');
+    const supportedLanguages = getSupportedLanguages();
 
+    // Populate the select options dynamically
+    supportedLanguages.forEach(language => {
+        const option = document.createElement('option');
+        option.value = language.value;
+        option.textContent = language.name;
+        languageSelect.appendChild(option);
+    });
+
+    // Set the default language to the first option
+    languageSelect.value = supportedLanguages[0].value;
+};
+
+// Get the initial code for all supported languages
+const getInitialCodes = () => {
+    const codeDataElement = document.getElementById('initial-code-data');
+    const initialCodes = {};
+
+    // Obtén los lenguajes soportados
+    getSupportedLanguages().forEach(language => {
+        initialCodes[language.value] = JSON.parse(
+            codeDataElement.getAttribute(`data-${language.value}`)
+        );
+    });
+
+    return initialCodes;
+};
+
+const getLastCodes = () => {
+    const codeDataElement = document.getElementById('initial-code-data');
+    const lastCodes = {};
+
+    // Obtén los lenguajes soportados
+    getSupportedLanguages().forEach(language => {
+        lastCodes[language.value] = JSON.parse(
+            codeDataElement.getAttribute(`data-last-${language.value}`)
+        );
+    });
+
+    return lastCodes;
+};
+
+
+// Initialize CodeMirror and load the selected language code
 const initializeCodeMirror = () => {
     const editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
         lineNumbers: true,
-        mode: "python",
         theme: "dracula",
         indentUnit: 4,
         indentWithTabs: true,
@@ -27,27 +64,35 @@ const initializeCodeMirror = () => {
         tabSize: 4
     });
 
-    // Get the initial code from the hidden div
-    const initial_codes = get_initial_codes();
-    const last_codes = get_last_codes();
+    const initialCodes = getInitialCodes();
+    const lastCodes = getLastCodes();
+    const languageSelect = document.getElementById('language-select');
 
-    // Load the last sent code if it exists, otherwise load the initial code
-    const selectedLanguage = 'python';
-    const lastCode = last_codes[selectedLanguage];
+    // Set the initial editor content and mode
+    const setEditorContent = (language) => {
+        const selectedLanguage = getSupportedLanguages().find(lang => lang.value === language);
+        editor.setOption("mode", selectedLanguage.mode);
 
-    if (lastCode !== null && lastCode !== "None" && lastCode !== "") {
-        editor.setValue(lastCode);
-    } else {
-        editor.setValue(initial_codes[selectedLanguage]);
-    }
+        const lastCode = lastCodes[language];
+        editor.setValue(lastCode && lastCode !== "None" ? lastCode : initialCodes[language]);
+    };
+
+    // Listen to language changes and update the editor
+    languageSelect.addEventListener('change', () => {
+        const selectedLanguage = languageSelect.value;
+        setEditorContent(selectedLanguage);
+    });
+
+    // Initialize with the default language
+    setEditorContent(languageSelect.value);
 
     return editor;
-}
+};
 
 // Load the initial code from the editor according to the problem and the selected language
-const change_initial_code = (editor, selected_language) => {
-    const initial_codes = get_initial_codes();
-    const last_codes = get_last_codes();
+const changeInitialCode = (editor, selected_language) => {
+    const initial_codes = getInitialCodes();
+    const last_codes = getLastCodes();
     const mode = selected_language === 'python' ? 'python' : 'text/x-java';
 
     editor.setOption("mode", mode);
@@ -61,27 +106,27 @@ const change_initial_code = (editor, selected_language) => {
     }
 }
 
-const reload_last_code = (editor) => {
-    if (get_last_codes()[document.querySelector('#language-select').value] === null) {
+const reloadLastCode = (editor) => {
+    if (getLastCodes()[document.querySelector('#language-select').value] === null) {
         Swal.fire({
             icon: 'error',
             title: 'No has subido código',
             text: 'No hay código guardado para este problema',
         })
     } else {
-        editor.setValue(get_last_codes()[document.querySelector('#language-select').value]);
+        editor.setValue(getLastCodes()[document.querySelector('#language-select').value]);
     }
 }
 
-const reload_initial_code = (editor) => {
-    editor.setValue(get_initial_codes()[document.querySelector('#language-select').value]);
+const reloadInitialCode = (editor) => {
+    editor.setValue(getInitialCodes()[document.querySelector('#language-select').value]);
 }
 
-const change_codemirror_code = (editor, code) => {
+const changeCodemirrorCode = (editor, code) => {
     editor.setValue(code);
 }
 
-const run_code = (url, editor) => {
+const runCode = (url, editor) => {
     // Get problem features
     const problem_id = document.getElementById('exercise-number').getAttribute('data-exercise');
     const language = document.querySelector('#language-select').value;
@@ -105,66 +150,64 @@ const run_code = (url, editor) => {
             'code': code
         })
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data['error']) {
-                if (data['error'] === 'Para subir una solución, primero inicia sesión.') {
-                    title = 'Debes iniciar sesión';
-                }
-                // Show the error message
-                Swal.fire({
-                    icon: 'error',
-                    title: title,
-                    text: data['error'],
-                })
-                output.innerHTML = '>_';
-                return;
-            }
+    .then(response => response.json())
+    .then(data => {
+        if (data['error']) {
+            const title = data['error'] === 'Para subir una solución, primero inicia sesión.' ? 'Debes iniciar sesión' : 'Error';
+            // Show the error message
+            Swal.fire({
+                icon: 'error',
+                title: title,
+                text: data['error'],
+            });
+            output.innerHTML = '>_';
+            return;
+        }
+        
+        // Update the output area
+        const result = document.createElement('p');
+        result.classList.add('output__line');
 
-            // Update the output area
-            const result = document.createElement('p');
-            result.classList.add('output__line');
+        if (data['result'] === 'Exito') {
+            result.classList.add('output__success');
+        } else {
+            result.classList.add('output__failure');
+        }
 
-            if (data['result'] === 'Exito') {
-                result.classList.add('output__success');
-            } else {
-                result.classList.add('output__failure');
-            }
+        result.innerHTML = `<b style="font-size: 1.2rem">${data['result']}</b> `;
 
-            result.innerHTML = `<b style="font-size: 1.2rem">${data['result']}</b> `;
+        const feedback = document.createElement('p');
+        feedback.classList.add('output__line');
+        feedback.innerHTML = data['feedback'];
 
-            const feedback = document.createElement('p');
-            feedback.classList.add('output__line');
-            feedback.innerHTML = data['feedback'];
+        const expectedOutputTitle = document.createElement('p');
+        expectedOutputTitle.innerHTML = '<b style="font-size: 0.8rem">Resultados esperados:</b>';
 
-            const expectedOutputTitle = document.createElement('p');
-            expectedOutputTitle.innerHTML = '<b style="font-size: 0.8rem">Resultados esperados:</b>';
+        const expectedOutput = document.createElement('p');
+        expectedOutput.classList.add('output__line');
+        expectedOutput.textContent = data['expected_output'];
 
-            const expectedOutput = document.createElement('p');
-            expectedOutput.classList.add('output__line');
-            expectedOutput.textContent = data['expected_output'];
+        const testedOutputTitle = document.createElement('p');
+        testedOutputTitle.innerHTML = '<b style="font-size: 0.8rem">Resultados obtenidos:</b>';
 
-            const testedOutputTitle = document.createElement('p');
-            testedOutputTitle.innerHTML = '<b style="font-size: 0.8rem">Resultados obtenidos:</b>';
+        const testedOutput = document.createElement('p');
+        testedOutput.classList.add('output__line');
+        testedOutput.textContent = data['tested_output'];
 
-            const testedOutput = document.createElement('p');
-            testedOutput.classList.add('output__line');
-            testedOutput.textContent = data['tested_output'];
+        output.innerHTML = '';
+        output.appendChild(result);
+        output.appendChild(feedback);
+        output.appendChild(expectedOutputTitle);
+        output.appendChild(expectedOutput);
+        output.appendChild(testedOutputTitle);
+        output.appendChild(testedOutput);
 
-            output.innerHTML = '';
-            output.appendChild(result);
-            output.appendChild(feedback);
-            output.appendChild(expectedOutputTitle);
-            output.appendChild(expectedOutput);
-            output.appendChild(testedOutputTitle);
-            output.appendChild(testedOutput);
-
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            output.innerHTML = 'Error: ' + error;
-        });
+        console.log('Success:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        output.innerHTML = 'Error: ' + error;
+    });
 }
 
 const logout = async (event) => {
@@ -201,7 +244,7 @@ const logout = async (event) => {
     }
 }
 
-const run_app = () => {
+const runApp = () => {
     const run_button = document.getElementById('run-button');
     const submit_button = document.getElementById('submit-button');
     const language_select = document.querySelector('#language-select');
@@ -215,6 +258,8 @@ const run_app = () => {
     const submissions_btns = document.querySelectorAll('.submission-btn');
     const description_title = document.getElementById('description-title');
     const submissions_title = document.getElementById('submissions-title');
+
+    initializeLanguageSelector();
     const editor = initializeCodeMirror();
 
     description_btn.addEventListener('click', function () {
@@ -238,33 +283,33 @@ const run_app = () => {
     submissions_btns.forEach(button => {
         button.addEventListener('click', () => {
             const code = JSON.parse(button.getAttribute('submission-code'));
-            change_codemirror_code(editor, code);
+            changeCodemirrorCode(editor, code);
         });
     });
 
     run_button.addEventListener('click', function () {
-        run_code('/run', editor);
+        runCode('/run', editor);
     });
 
     submit_button.addEventListener('click', function () {
-        run_code('/submit', editor);
+        runCode('/submit', editor);
     });
 
     language_select.addEventListener('change', function () {
         const selected_language = language_select.value;
-        change_initial_code(editor, selected_language);
+        changeInitialCode(editor, selected_language);
     });
 
     reload_initial_code_button.addEventListener('click', function () {
-        reload_initial_code(editor);
+        reloadInitialCode(editor);
     });
 
     reload_last_code_button.addEventListener('click', function () {
-        reload_last_code(editor);
+        reloadLastCode(editor);
     });
     
     logout_button.addEventListener('click', logout);
 }
 
-document.addEventListener('DOMContentLoaded', run_app);
+document.addEventListener('DOMContentLoaded', runApp);
 

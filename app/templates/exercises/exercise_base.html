@@ -75,7 +75,8 @@
                 {% if session['username'] %}
                 <nav class="header__nav" aria-label="user menu">
                     <span class="header__username">{{ session['username'] }}</span>
-                    <a href="{{ url_for('auth.logout') }}" class="header__button header__button--danger" id="logout-button">
+                    <a href="{{ url_for('auth.logout') }}" class="header__button header__button--danger"
+                        id="logout-button">
                         Cerrar sesión
                     </a>
                 </nav>
@@ -134,11 +135,11 @@
                                     <h3>Entrada:</h3>
                                     <pre>{{ problem.get_test_list() }}</pre>
                                     {% if has_target %}
-                                        <pre>{{ problem.get_target() }}</pre>
+                                    <pre>{{ problem.get_target() }}</pre>
                                     {% endif %}
                                     <h3>Salida esperada:</h3>
                                     <pre>{{ problem.get_expected_output() }}</pre>
-                                </div>                                
+                                </div>
                             </div>
                         </div>
 
@@ -152,26 +153,12 @@
                             </ul>
                         </div>
 
-                        {% set ns = namespace(last_python_code=None, last_java_code=None) %}
-
-                        {% if progress_list is defined and progress_list|length > 0 %}
-                        {% for progress in progress_list %}
-                        {% if progress.problem_id == 1 %}
-                        {% if progress.language == 'python' %}
-                        {% set ns.last_python_code = progress.code %}
-                        {% elif progress.language == 'java' %}
-                        {% set ns.last_java_code = progress.code %}
-                        {% endif %}
-                        {% endif %}
-                        {% endfor %}
-                        {% endif %}
-
-                        <div id="initial-code-data"
-                            data-python="{{ problem.get_initial_python_code() | tojson | forceescape }}"
-                            data-java="{{ problem.get_initial_java_code() | tojson | forceescape }}"
-                            data-last-python-code="{{ ns.last_python_code | tojson | forceescape }}"
-                            data-last-java-code="{{ ns.last_java_code | tojson | forceescape }}">
+                        <div id="initial-code-data" {% for language, codes in language_codes.items() %} data-{{ language
+                            }}="{{ codes.initial | tojson | forceescape }}" data-last-{{ language
+                            }}="{{ codes.last | tojson | forceescape }}" {% endfor %}>
                         </div>
+
+                        <div id="language-data" data-languages="{{ supported_languages | tojson | forceescape }}"></div>
                     </div>
 
                     <div class="problem-content hidden" id="problem-submissions">
@@ -220,8 +207,7 @@
 
                         <div class="languages__select">
                             <select id="language-select">
-                                <option value="python">Python</option>
-                                <option value="java">Java</option>
+                                <!-- Loaded in JS -->
                             </select>
 
                             <div class="reload__buttons">

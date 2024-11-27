@@ -114,6 +114,17 @@ class Problem2(IProblem):
             to be implemented in Java.
         """
         return "validatePassword"
+    
+    def get_ruby_function_name(self) -> str:
+        """
+        Returns the name of the function in the problem that is expected
+        to be implemented in Ruby.
+
+        Returns:
+            str: The name of the function in the problem that is expected
+            to be implemented in Ruby.
+        """
+        return "validate_password"
 
     def get_test_function(self) -> callable:
         """
@@ -185,14 +196,7 @@ class Problem2(IProblem):
         """
         return (
             "def validate_password(password: str) -> bool:\n"
-            '    """\n'
-            "    Validates if a given password meets the requirements "
-            "       specified in the problem's metadata.\n\n"
-            "    Args:\n"
-            "        password: The password to be tested.\n\n"
-            "    Returns:\n"
-            "        A boolean indicating whether the password is valid or not.\n"
-            '    """\n'
+            "    # Your code goes here\n"
             "    return None\n"
         )
 
@@ -204,6 +208,14 @@ class Problem2(IProblem):
             str: The initial Java code for the problem.
         """
         return (
+            "public static boolean validatePassword(String n) {\n"
+            "    // Your code goes here\n"
+            "    return false;\n"
+            "}\n"
+        )
+    
+    def get_testing_java_code(self) -> str:
+        return (
             "package app.temp;\n\n"
             "public class validatePassword {\n"
             "    public static void main(String[] args) {\n"
@@ -211,9 +223,31 @@ class Problem2(IProblem):
             "        boolean result = validatePassword(n);\n"
             "        System.out.println(result);\n"
             "    }\n\n"
-            "    public static boolean validatePassword(String n) {\n"
-            "        // Your code goes here\n"
-            "        return false;\n"
-            "    }\n"
-            "}\n"
         )
+    
+    def get_initial_ruby_code(self) -> str:
+        """
+        Returns the initial Ruby code for the problem.
+
+        Returns:
+            str: The initial Ruby code for the problem.
+        """
+        return (
+            "def validate_password(password)\n"
+            "    # Your code goes here\n"
+            "    return false\n"
+            "end\n"
+        )
+    
+    def get_testing_ruby_code(self) -> str:
+        return (
+            "input = ARGV[0]\n"
+            "result = validate_password(input)\n"
+            "puts result\n"
+        )
+    
+    def is_boolean(self):
+        return True
+    
+    def is_integer(self):
+        return False

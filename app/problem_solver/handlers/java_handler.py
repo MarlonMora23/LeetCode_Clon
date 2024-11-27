@@ -14,44 +14,43 @@ class JavaHandler(ILanguageHandler):
 
     def is_function_defined(self, function_name: str) -> bool:
         return re.search(rf"public static .* {function_name}\(", self.code) is not None
-
+    
+    def write_code(self, problem: "IProblem") -> None:
+        with open(f"{self.temp_file_path}.java", "w", encoding="utf-8") as file:
+            file.write(problem.get_testing_java_code())
+            file.write(self.code)
+            file.write("}\n")
+            
     def test_submission(self, problem: "IProblem") -> Dict[str, Any]:
         function_name: str = problem.get_java_function_name()
         self.temp_file_path: str = f"app/temp/{function_name}"
 
         try:
-            return self._compile_and_test(function_name)
+            self.write_code(problem)
+
+            if not self.is_function_defined(function_name):
+                return {
+                    "result": "Fallo",
+                    "feedback": f"La función {function_name} no existe.",
+                }
+
+            compile_process = subprocess.run(
+                ["javac", f"{self.temp_file_path}.java"], capture_output=True, check=True
+            )
+
+            if compile_process.returncode != 0:
+                return {
+                    "result": "Fallo",
+                    "feedback": compile_process.stderr.decode("utf-8"),
+                }
+
+            return {"result": "Exito"}
 
         except subprocess.CalledProcessError as e:
-            self._cleanup_files()
+            self.cleanup_files()
             return {"result": "Fallo", "feedback": [str(e.stderr)]}
 
-    def _compile_and_test(
-        self,
-        function_name: str,
-    ) -> Dict[str, Any]:
-        with open(f"{self.temp_file_path}.java", "w", encoding="utf-8") as file:
-            file.write(self.code)
-
-        if not self.is_function_defined(function_name):
-            return {
-                "result": "Fallo",
-                "feedback": f"La función {function_name} no existe.",
-            }
-
-        compile_process = subprocess.run(
-            ["javac", f"{self.temp_file_path}.java"], capture_output=True, check=True
-        )
-
-        if compile_process.returncode != 0:
-            return {
-                "result": "Fallo",
-                "feedback": compile_process.stderr.decode("utf-8"),
-            }
-
-        return {"result": "Exito"}
-
-    def _cleanup_files(self) -> None:
+    def cleanup_files(self) -> None:
         try:
             os.remove(f"{self.temp_file_path}.java")
             os.remove(f"{self.temp_file_path}.class")
@@ -72,5 +71,5 @@ class JavaHandler(ILanguageHandler):
             )
             return run_process.stdout.strip()  # Java output as a string
         except subprocess.CalledProcessError as e:
-            self._cleanup_files()
             raise RuntimeError(f"Java execution failed: {e.stderr}")
+        

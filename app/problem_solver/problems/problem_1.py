@@ -89,6 +89,14 @@ class Problem1(IProblem):
             to be implemented in Java.
         """
         return "isPrimeNumber"
+    
+    def get_ruby_function_name(self) -> str:
+        """
+        Returns:
+            str: The name of the function in the problem that is expected
+            to be implemented in Ruby.
+        """
+        return "is_prime_number"
 
     def get_test_function(self) -> callable:
         """
@@ -147,17 +155,7 @@ class Problem1(IProblem):
         """
         return (
             "def is_prime_number(n: int) -> bool:\n"
-            '    """\n'
-            "    Checks if a given number is a prime number.\n\n"
-            "    Parameters\n"
-            "    ----------\n"
-            "    n : int\n"
-            "        The number to be checked for primality.\n\n"
-            "    Returns\n"
-            "    -------\n"
-            "    bool\n"
-            "        True if the number is a prime number, False otherwise.\n"
-            '    """\n'
+            "    # Your code goes here\n"
             "    return None\n"
         )
 
@@ -169,6 +167,14 @@ class Problem1(IProblem):
             str: The initial Java code for the problem.
         """
         return (
+            "public static boolean isPrimeNumber(int n) {\n"
+            "    // Your code goes here\n"
+            "    return false;\n"
+            "}\n"
+        )
+    
+    def get_testing_java_code(self) -> str:
+        return (
             "package app.temp;\n\n"
             "public class isPrimeNumber {\n"
             "    public static void main(String[] args) {      \n"
@@ -176,9 +182,32 @@ class Problem1(IProblem):
             "        boolean result = isPrimeNumber(n);\n"
             "        System.out.println(result);\n"
             "    }\n\n"
-            "    public static boolean isPrimeNumber(int n) {\n"
-            "        // Your code goes here\n"
-            "        return false;\n"
-            "    }\n"
-            "}\n"
         )
+    
+    def get_initial_ruby_code(self) -> str:
+        """
+        Returns the initial Ruby code for the problem, formatted for improved readability.
+
+        Returns:
+            str: The initial Ruby code for the problem.
+        """
+        return (
+            "def is_prime_number(n)\n"
+            "    # Your code goes here\n"
+            "    return false\n"
+            "end\n"
+            
+        )
+    
+    def get_testing_ruby_code(self) -> str:
+        return (
+            "input = ARGV[0].to_i\n"
+            "result = is_prime_number(input)\n"
+            "puts result\n"
+        )
+    
+    def is_boolean(self):
+        return True
+    
+    def is_integer(self):
+        return False
