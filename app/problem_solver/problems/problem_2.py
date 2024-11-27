@@ -46,6 +46,9 @@ class Problem2(IProblem):
         """
         return "Escribe una función que valide una contraseña. Una contraseña es valida si contiene al menos una letra mayúscula, una letra minúscula, un número y un carácter especial."
 
+    def get_detailed_problem_description(self) -> str:
+        return "Escribe una función que valide una contraseña. Una contraseña es valida si contiene al menos una letra mayúscula, una letra minúscula, un número y un carácter especial. Escribe en la consola un programa que determine si una contraseña es valida o no. La función recibe una contraseña como argumento y devuelve Verdadero si la contraseña es valida, Falso si no lo es."
+    
     def get_problem_difficulty(self) -> str:
         """
         Returns:
@@ -70,6 +73,17 @@ class Problem2(IProblem):
             # Invalid passwords
             "short1!",  # Less than 8 characters
             "nouppercase1!",  # No uppercase letters
+        ]
+    
+    def get_submission_test_list(self) -> list[str]:
+        return [
+            # Valid passwords
+            "P@ssw0rd1",
+            "Str0ngP@ssw0rd2",
+            "L0ngP@ssw0rd3",
+            "V@lidP@ssw0rd4",
+            # Invalid passwords
+            "short1!",  # Less than 8 characters
             "NOLOWERCASE1!",  # No lowercase letters
             "NoSpecial123",  # No special characters
             "NoDigits!",  # No numbers
@@ -77,10 +91,10 @@ class Problem2(IProblem):
             "12345678",  # Only numbers, no letters or special characters
             "abcdefgh",  # Only lowercase letters, no numbers or special characters
             "ABCDEFGH",  # Only uppercase letters, no numbers or special characters
-            "!@#$%^&*()",
+            "!@#$%^&*()"
         ]
 
-    def get_expected_output(self) -> list:
+    def get_expected_output(self, submit: bool = False) -> list:
         """
         Returns a list of expected outputs for the problem.
 
@@ -90,8 +104,9 @@ class Problem2(IProblem):
             list: A list of expected outputs.
         """
         test_function: callable = self.get_test_function()
+        test_list = self.get_test_list() if not submit else self.get_submission_test_list()
 
-        return [test_function(password) for password in self.get_test_list()]
+        return [test_function(password) for password in test_list]
 
     def get_python_function_name(self) -> str:
         """

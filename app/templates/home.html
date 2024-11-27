@@ -112,6 +112,9 @@
             </div>
             {% endfor %}
         </div>
+        <div id="no-results-message" class="no-results-message" style="display: none;">
+            <p>No hay problemas disponibles que coincidan con los filtros aplicados.</p>
+        </div>
     </main>
 
     <script src="{{ url_for('static', filename='js/home_script.js') }}"></script>

@@ -59,7 +59,7 @@ def get_number_of_problems() -> int:
     return len(get_problems())
 
 
-def run_code(problem_id: int, code: str, language: str) -> tuple:
+def run_code(problem_id: int, code: str, language: str, submit: bool = False) -> tuple:
     """
     Runs a given code for a given problem and language.
 
@@ -101,7 +101,7 @@ def run_code(problem_id: int, code: str, language: str) -> tuple:
     # Test the submission
     if problem_id in get_problems_ids():
         code_tester = CodeTester()
-        return code_tester.test_problem(problem, submission)
+        return code_tester.test_problem(problem, submission, submit)
 
     return jsonify({"error": "Problema no encontrado o lenguaje no soportado."}), 400
 

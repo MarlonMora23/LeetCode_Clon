@@ -46,6 +46,9 @@ class Problem1(IProblem):
         """
         return "Escribe una función que determina si un número es primo o no. Un número primo es un número natural mayor que 1 que no tiene divisores positivos otros que 1 y el mismo."
 
+    def get_detailed_problem_description(self) -> str:
+        return "Un número primo es un número natural mayor que 1 que no tiene divisores positivos otros que 1 y el mismo. Escribe en la consola un programa que determine si un número es primo o no. La función recibe un número como argumento y devuelve Verdadero si el número es primo, Falso si no lo es."
+
     def get_problem_difficulty(self) -> str:
         """
         Returns:
@@ -61,7 +64,10 @@ class Problem1(IProblem):
 
         return [3, 4, 7, 10, 11, 12, 19, 20, 23, 24, 29, 33, 37]
 
-    def get_expected_output(self) -> list:
+    def get_submission_test_list(self) -> list:
+        return [n for n in range(2, 1000) if n % 2 == 1]
+
+    def get_expected_output(self, submit: bool = False) -> list:
         """
         Returns a list of expected outputs for the problem.
 
@@ -71,8 +77,11 @@ class Problem1(IProblem):
             list: A list of expected outputs.
         """
         test_function: callable = self.get_test_function()
+        test_list = (
+            self.get_test_list() if not submit else self.get_submission_test_list()
+        )
 
-        return [test_function(i) for i in self.get_test_list()]
+        return [test_function(i) for i in test_list]
 
     def get_python_function_name(self) -> str:
         """
@@ -89,7 +98,7 @@ class Problem1(IProblem):
             to be implemented in Java.
         """
         return "isPrimeNumber"
-    
+
     def get_ruby_function_name(self) -> str:
         """
         Returns:
@@ -172,7 +181,7 @@ class Problem1(IProblem):
             "    return false;\n"
             "}\n"
         )
-    
+
     def get_testing_java_code(self) -> str:
         return (
             "package app.temp;\n\n"
@@ -183,7 +192,7 @@ class Problem1(IProblem):
             "        System.out.println(result);\n"
             "    }\n\n"
         )
-    
+
     def get_initial_ruby_code(self) -> str:
         """
         Returns the initial Ruby code for the problem, formatted for improved readability.
@@ -196,18 +205,15 @@ class Problem1(IProblem):
             "    # Your code goes here\n"
             "    return false\n"
             "end\n"
-            
         )
-    
+
     def get_testing_ruby_code(self) -> str:
         return (
-            "input = ARGV[0].to_i\n"
-            "result = is_prime_number(input)\n"
-            "puts result\n"
+            "input = ARGV[0].to_i\n" "result = is_prime_number(input)\n" "puts result\n"
         )
-    
+
     def is_boolean(self):
         return True
-    
+
     def is_integer(self):
         return False

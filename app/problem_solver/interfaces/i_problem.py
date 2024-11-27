@@ -47,6 +47,16 @@ class IProblem(ABC):
         """
         pass
 
+    @abstractmethod
+    def get_detailed_problem_description(self) -> str:
+        """
+        Returns the detailed description of the problem.
+
+        Returns:
+            str: The detailed description of the problem.
+        """
+        pass
+
     def get_problem_difficulty(self) -> str:
         """
         Returns the difficulty of the problem.
@@ -66,8 +76,17 @@ class IProblem(ABC):
         """
         pass
 
+    def get_submission_test_list(self) -> list:
+        """
+        Returns a list of test cases for the problem.
+
+        Returns:
+            list: A list of test cases.
+        """
+        pass
+
     @abstractmethod
-    def get_expected_output(self) -> list:
+    def get_expected_output(self, submit: bool = False) -> list:
         """
         Returns a list of expected outputs for the problem.
 

@@ -31,7 +31,10 @@ class Problem4(IProblem):
         Returns:
             str: The description of the problem.
         """
-        return "Escribe una función que convierta un número entero a un número romano."
+        return "Escribe una función que convierta un número entero a un número romano. Un número romano es un número que se representa con letras del alfabeto latino."
+    
+    def get_detailed_problem_description(self) -> str:
+        return "Un número romano es un número que se representa con letras del alfabeto latino. Escribe en la consola un programa que convierta un número entero a un número romano. La función recibe un número como argumento y devuelve su equivalente número romano."
     
     def get_problem_difficulty(self) -> str:
         """
@@ -50,8 +53,11 @@ class Problem4(IProblem):
             list: A list of test cases.
         """
         return [1, 4, 9, 58, 1994, 3999, 4000, 0, -5]
+    
+    def get_submission_test_list(self) -> list:
+        return [n for n in range(2, 1000) if n % 2 == 1]
 
-    def get_expected_output(self) -> list:
+    def get_expected_output(self, submit: bool) -> list:
         """
         Returns a list of expected outputs for the problem.
 
@@ -61,7 +67,7 @@ class Problem4(IProblem):
             list: A list of expected outputs.
         """
         test_function = self.get_test_function()
-        test_cases = self.get_test_list()
+        test_cases = self.get_test_list() if not submit else self.get_submission_test_list()
         return [test_function(i) for i in test_cases]
     
     def get_python_function_name(self) -> str:

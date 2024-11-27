@@ -5,11 +5,12 @@ from app.problem_solver.interfaces.i_base_test_strategy import IBaseTestStrategy
 
 class SingleInputStrategy(IBaseTestStrategy):
     @staticmethod
-    def test(handler: "ILanguageHandler", problem: "IProblem") -> list:
+    def test(handler: "ILanguageHandler", problem: "IProblem", submit: bool) -> list:
         """Tests single-input problems."""
         tested_output = []
+        test_list = problem.get_test_list() if not submit else problem.get_submission_test_list()
         try:
-            for test_number in problem.get_test_list():
+            for test_number in test_list:
                 result = handler.execute(problem, test_number)
 
                 if problem.is_boolean():

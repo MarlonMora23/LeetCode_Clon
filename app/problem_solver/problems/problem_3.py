@@ -44,7 +44,10 @@ class Problem3(IProblem):
         Returns:
             str: The description of the problem.
         """
-        return "Escribe una función que busca un número en un arreglo y devuelve True si lo encuentra, False si no lo encuentra."
+        return "Escribe una función que busca un número en un arreglo y devuelve Verdadero si lo encuentra, Falso si no lo encuentra."
+    
+    def get_detailed_problem_description(self) -> str:
+        return "Escriba una funcion que busque un numero en un arreglo y devuelva verdadero si lo encuentra, o falso si no lo encuentra. La función recibe dos arguementos, un arreglo y un numero, y devuelve verdadero si lo encuentra, o falso si no lo encuentra. En el ejemplo, la primera entrada es la lista de números y la segunda entrada es la lista de numeros a buscar. Ten en cuenta que aunque la segunda entrada es una lista en el ejemplo, se enviará un número por iteración."
 
     def get_problem_difficulty(self) -> str:
         """
@@ -61,6 +64,9 @@ class Problem3(IProblem):
             list: A list of test cases.
         """
         return [3, 4, 7, 10, 11, 12, 19, 20, 23, 24, 29, 33, 37]
+    
+    def get_submission_test_list(self) -> list:
+        return [n for n in range(2, 1000) if n % 2 == 1]
 
     def get_target(self) -> any:
         """
@@ -70,8 +76,11 @@ class Problem3(IProblem):
             any: The target of the problem.
         """
         return [3, 5, 12, 22, 37]
+    
+    def get_submission_target(self) -> any:
+        return [n for n in range(2, len(self.get_submission_test_list()) * 7, 7) if n % 2 == 1]
 
-    def get_expected_output(self) -> list:
+    def get_expected_output(self, submit: bool) -> list:
         """
         Returns a list of expected outputs for the problem.
 
@@ -82,10 +91,10 @@ class Problem3(IProblem):
             list: A list of expected outputs.
         """
         test_function: callable = self.get_test_function()
+        test_list = self.get_test_list() if not submit else self.get_submission_test_list()
+        target = self.get_target() if not submit else self.get_submission_target()
 
-        return [
-            test_function(self.get_test_list(), target) for target in self.get_target()
-        ]
+        return [test_function(test_list, target) for target in target]
 
     def get_python_function_name(self) -> str:
         """

@@ -124,7 +124,7 @@
 
                         <div class="problem-section">
                             <div class="problem-description">
-                                {{ problem.get_problem_description() | safe }}
+                                {{ problem.get_detailed_problem_description() | safe }}
                             </div>
                         </div>
 
@@ -138,7 +138,7 @@
                                     <pre>{{ problem.get_target() }}</pre>
                                     {% endif %}
                                     <h3>Salida esperada:</h3>
-                                    <pre>{{ problem.get_expected_output() }}</pre>
+                                    <pre>{{ problem.get_expected_output(False) }}</pre>
                                 </div>
                             </div>
                         </div>

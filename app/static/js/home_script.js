@@ -50,50 +50,46 @@ const search_problems = () => {
     const statusFilter = document.getElementById('status-filter');
     const problemsContainer = document.getElementById('problems-container');
     const problemCards = problemsContainer.querySelectorAll('.problem-card');
+    const noResultsMessage = document.getElementById('no-results-message');
 
-    // Search functionality
-    searchInput.addEventListener('input', () => {
-        const query = searchInput.value.toLowerCase();
-        filterProblems(); 
-    });
-
-    // Difficulty filter
-    difficultyFilter.addEventListener('change', () => {
-        const difficulty = difficultyFilter.value;
-        difficultyFilter.setAttribute('data-selected', difficulty); 
-        filterProblems(); 
-    });
-
-    // Status filter
-    statusFilter.addEventListener('change', () => {
-        const status = statusFilter.value;
-        statusFilter.setAttribute('data-selected', status); 
-        filterProblems(); 
-    });
+    // Add event listeners to all filters
+    searchInput.addEventListener('input', filterProblems);
+    difficultyFilter.addEventListener('change', filterProblems);
+    statusFilter.addEventListener('change', filterProblems);
 
     // Filter problems based on search, difficulty, and status
     function filterProblems() {
-        const query = searchInput.value.toLowerCase(); 
-        const selectedDifficulty = difficultyFilter.getAttribute('data-selected').toLowerCase();
-        const selectedStatus = statusFilter.getAttribute('data-selected').toLowerCase(); 
+        const query = searchInput.value.toLowerCase();
+        const selectedDifficulty = difficultyFilter.value.toLowerCase();
+        const selectedStatus = statusFilter.value.toLowerCase();
+
+        let visibleCount = 0;
 
         problemCards.forEach(card => {
-            const problemName = card.getAttribute('data-name').toLowerCase(); 
-            const problemDifficulty = card.getAttribute('data-difficulty').toLowerCase(); 
-            const problemStatus = card.getAttribute('data-status').toLowerCase(); 
+            const problemName = card.getAttribute('data-name').toLowerCase();
+            const problemDifficulty = card.getAttribute('data-difficulty').toLowerCase();
+            const problemStatus = card.getAttribute('data-status').toLowerCase();
 
             const matchesSearch = problemName.includes(query);
             const matchesDifficulty = selectedDifficulty === 'all' || problemDifficulty.includes(selectedDifficulty);
             const matchesStatus = selectedStatus === 'all' || problemStatus === selectedStatus;
 
             if (matchesSearch && matchesDifficulty && matchesStatus) {
-                card.style.display = ''; // Show the problem card
+                card.style.display = '';
+                visibleCount++;
             } else {
-                card.style.display = 'none'; // Hide the problem card
+                card.style.display = 'none';
             }
         });
+
+        // Show or hide the "no results" message
+        if (visibleCount === 0) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none';
+        }
     }
-}
+};
 
 
 function run_app() {

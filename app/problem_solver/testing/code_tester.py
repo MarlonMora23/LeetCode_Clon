@@ -28,7 +28,7 @@ class CodeTester:
     }
     
     @classmethod
-    def test_problem(cls, problem: 'IProblem', user_submission: 'UserSubmission') -> tuple[Response, int]:
+    def test_problem(cls, problem: 'IProblem', user_submission: 'UserSubmission', submit: bool) -> tuple[Response, int]:
         """Main method to test code submissions."""
         language: str = user_submission.get_language()
         code: str = user_submission.get_code()
@@ -76,17 +76,17 @@ class CodeTester:
         else:
             strategy = SingleInputStrategy
 
-        result = cls.test_function(handler, problem, strategy)
+        result = cls.test_function(handler, problem,  strategy, submit)
         
         status_code = 201 if result["result"] == "Exito" else 400
         return cls._create_response(user_submission, result), status_code
     
     @staticmethod
-    def test_function(handler: 'ILanguageHandler', problem: 'IProblem', strategy: 'IBaseTestStrategy') -> Dict[str, Any]:
+    def test_function(handler: 'ILanguageHandler', problem: 'IProblem', strategy: 'IBaseTestStrategy', submit: bool) -> Dict[str, Any]:
         """Tests if a given function works correctly."""
         try:
-            all_expected_output: list = problem.get_expected_output()
-            all_tested_output: list = strategy.test(handler, problem)
+            all_expected_output: list = problem.get_expected_output(submit)
+            all_tested_output: list = strategy.test(handler, problem, submit)
             
             for i, (expected, tested) in enumerate(zip(all_expected_output, all_tested_output)):
                 if expected != tested:

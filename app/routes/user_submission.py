@@ -129,7 +129,7 @@ def run() -> tuple:
     code = data.get("code")
     language = data.get("language")
 
-    return run_code(problem_id, code, language)
+    return run_code(problem_id, code, language, False)
 
 
 @user_submission_blueprint.route("/submit", methods=["POST"])
@@ -178,7 +178,7 @@ def submit():
     language: str = data.get("language")
 
     # Run the code and verify if it was successful
-    response: tuple = run_code(problem_id, code, language)
+    response: tuple = run_code(problem_id, code, language, True)
     solved: bool = response[1] == 201
 
     # Update the user's progress

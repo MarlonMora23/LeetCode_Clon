@@ -31,6 +31,9 @@ class Problem6(IProblem):
         """
         return "Escribe una función que determine si una cadena es un palíndromo. Un palíndromo es una cadena que se lee igual de izquierda a derecha que de derecha a izquierda."
     
+    def get_detailed_problem_description(self) -> str:
+        return "Un palíndromo es una cadena que se lee igual de izquierda a derecha que de derecha a izquierda. Escribe en la consola un programa que determine si una cadena es un palíndromo. La función recibe una cadena como argumento y devuelve Verdadero si la cadena es un palíndromo, Falso si no lo es."
+    
     def get_problem_difficulty(self) -> str:
         """
         Returns:
@@ -55,8 +58,24 @@ class Problem6(IProblem):
             "Was it a car or a cat I saw?",
             "Able was I, I saw Elba"
         ]
+    
+    def get_submission_test_list(self) -> list:
+        return [
+            "A Santa at NASA.",
+            "Do geese see God?",
+            "Mr. Owl ate my metal worm.",
+            "Do nine men interpret? Nine men, I nod.",
+            "Madam, I'm Adam.",
+            "A man, a plan, a cat, a canal, Panama!",
+            "Was it a car or a cat I saw?",
+            "No 'x' in Nixon.",
+            "Able was I ere I saw Elba.",
+            "A Toyota's a Toyota.",
+            "Never odd or even.",
+            "Madam, in Eden, I'm Adam."
+        ]
 
-    def get_expected_output(self) -> list:
+    def get_expected_output(self, submit) -> list:
         """
         Returns a list of expected outputs for the problem.
 
@@ -66,7 +85,7 @@ class Problem6(IProblem):
             list: A list of expected outputs.
         """
         test_function = self.get_test_function()
-        test_cases = self.get_test_list()
+        test_cases = self.get_test_list() if not submit else self.get_submission_test_list()
         return [test_function(i) for i in test_cases]
     
     def get_python_function_name(self) -> str:

@@ -31,7 +31,10 @@ class Problem5(IProblem):
         Returns:
             str: The description of the problem.
         """
-        return "Escribe una función que convierta un número entero a un número romano."
+        return "Escribe una función que convierta un número entero a un número romano. Un número romano es un número que se representa con letras del alfabeto latino."
+    
+    def get_detailed_problem_description(self) -> str:
+        return "Un número romano es un número que se representa con letras del alfabeto latino. Escribe en la consola un programa que convierta un número romano a un número entero. La función recibe un número romano como argumento y devuelve su equivalente número entero."
     
     def get_problem_difficulty(self) -> str:
         """
@@ -49,9 +52,24 @@ class Problem5(IProblem):
         Returns:
             list: A list of test cases.
         """
-        return ["I", "IV", "IX", "LVIII", "MCMXCIV","MMMCMXCIX"]
+        return ["II", "V", "X", "L", "C", "D", "M"]
+    
+    def get_submission_test_list(self) -> list:
+        """
+        Returns a list of test cases for the problem.
 
-    def get_expected_output(self) -> list:
+        The list contains integers and their corresponding Roman numeral conversions.
+
+        Returns:
+            list: A list of test cases.
+        """
+        return ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+        "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
+        "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX",
+        "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
+        "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L"]
+    
+    def get_expected_output(self, submit) -> list:
         """
         Returns a list of expected outputs for the problem.
 
@@ -61,7 +79,7 @@ class Problem5(IProblem):
             list: A list of expected outputs.
         """
         test_function = self.get_test_function()
-        test_cases = self.get_test_list()
+        test_cases = self.get_test_list() if not submit else self.get_submission_test_list()
         return [test_function(i) for i in test_cases]
     
     def get_python_function_name(self) -> str:
