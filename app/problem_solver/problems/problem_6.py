@@ -22,7 +22,7 @@ class Problem6(IProblem):
         Returns:
             str: The name of the problem.
         """
-        return "¿Es palindromo?"
+        return "¿Es palíndromo?"
     
     def get_problem_description(self) -> str:
         """

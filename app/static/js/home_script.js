@@ -59,7 +59,10 @@ const search_problems = () => {
 
     // Filter problems based on search, difficulty, and status
     function filterProblems() {
-        const query = searchInput.value.toLowerCase();
+        const query = searchInput.value
+            .toLowerCase()
+            .normalize("NFD") // Descompone caracteres diacríticos
+            .replace(/[\u0300-\u036f]/g, ""); // Elimina diacríticos
         const selectedDifficulty = difficultyFilter.value.toLowerCase();
         const selectedStatus = statusFilter.value.toLowerCase();
 
@@ -67,10 +70,14 @@ const search_problems = () => {
 
         problemCards.forEach(card => {
             const problemName = card.getAttribute('data-name').toLowerCase();
+            const normalizedProblemName = problemName
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
             const problemDifficulty = card.getAttribute('data-difficulty').toLowerCase();
             const problemStatus = card.getAttribute('data-status').toLowerCase();
 
-            const matchesSearch = problemName.includes(query);
+            const matchesSearch = normalizedProblemName.includes(query);
             const matchesDifficulty = selectedDifficulty === 'all' || problemDifficulty.includes(selectedDifficulty);
             const matchesStatus = selectedStatus === 'all' || problemStatus === selectedStatus;
 

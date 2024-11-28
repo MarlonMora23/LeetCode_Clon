@@ -24,7 +24,7 @@ class Problem5(IProblem):
         Returns:
             str: The name of the problem.
         """
-        return "Numero romano a entero"
+        return "Número romano a entero"
     
     def get_problem_description(self) -> str:
         """
