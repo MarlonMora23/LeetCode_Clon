@@ -209,7 +209,9 @@ class Problem1(IProblem):
 
     def get_testing_ruby_code(self) -> str:
         return (
-            "input = ARGV[0].to_i\n" "result = is_prime_number(input)\n" "puts result\n"
+            "input = ARGV[0].to_i\n" 
+            "result = is_prime_number(input)\n" 
+            "puts result\n"
         )
 
     def is_boolean(self):

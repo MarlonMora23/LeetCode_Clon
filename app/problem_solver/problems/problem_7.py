@@ -1,28 +1,12 @@
-"""
-This module contains the Problem1 class, which represents all the features of 
-the first exercise of the course.
-
-The first exercise is to write a function that determines if a number is prime or not.
-A prime number is a natural number greater than 1 that has no positive divisors
-other than 1 and itself.
-
-The Problem1 class implements the IProblem interface and provides a test list and
-expected output for the exercise.
-"""
-
 from app.problem_solver.interfaces.i_problem import IProblem
 
 
 class Problem7(IProblem):
     """
-    The Problem1 class represents the first exercise of the course.
+    Represents the problem of converting a monetary amount to its English word representation.
 
-    The first exercise is to write a function that determines if a number is prime or not.
-    A prime number is a natural number greater than 1 that has no positive divisors
-    other than 1 and itself.
-
-    The Problem1 class implements the IProblem interface and provides a test list and
-    expected output for the exercise.
+    The problem is to write a function that converts a given amount in dollars and cents
+    to its English words representation.
     """
 
     def get_problem_id(self) -> int:
@@ -37,35 +21,38 @@ class Problem7(IProblem):
         Returns:
             str: The name of the problem.
         """
-        return "¿Es primo?"
+        return "Convertir dinero a inglés"
 
     def get_problem_description(self) -> str:
         """
         Returns:
             str: The description of the problem.
         """
-        return "Escribe una función que determina si un número es primo o no. Un número primo es un número natural mayor que 1 que no tiene divisores positivos otros que 1 y el mismo."
+        return "Escribe una función que convierta un monto monetario dado en su representación en palabras en inglés."
 
     def get_detailed_problem_description(self) -> str:
-        return "Un número primo es un número natural mayor que 1 que no tiene divisores positivos otros que 1 y el mismo. Escribe en la consola un programa que determine si un número es primo o no. La función recibe un número como argumento y devuelve Verdadero si el número es primo, Falso si no lo es."
+        return """
+            La función debe recibir como parámetro un monto monetario en formato numérico (por ejemplo, 123.45)
+            y debe devolver una cadena de texto que represente el monto en inglés
+            (por ejemplo, "one hundred twenty-three dollars and forty-five cents").
+            """
 
     def get_problem_difficulty(self) -> str:
         """
         Returns:
             str: The difficulty of the problem.
         """
-        return "easy"
+        return "hard"
 
     def get_test_list(self) -> list:
         """
         Returns:
             list: A list of test cases.
         """
-
-        return [3, 4, 7, 10, 11, 12, 19, 20, 23, 24, 29, 33, 37]
+        return [0, 0.5, 1, 1.2, 4.2, 10]
 
     def get_submission_test_list(self) -> list:
-        return [n for n in range(2, 1000) if n % 2 == 1]
+        return [0.01, 5.67, 12.34, 100.00, 1234.56, 1000.99]
 
     def get_expected_output(self, submit: bool = False) -> list:
         """
@@ -84,12 +71,7 @@ class Problem7(IProblem):
         return [test_function(i) for i in test_list]
 
     def get_python_function_name(self) -> str:
-        """
-        Returns:
-            str: The name of the function in the problem that is expected
-            to be implemented in Python.
-        """
-        return "is_prime_number"
+        return "money_to_english"
 
     def get_java_function_name(self) -> str:
         """
@@ -97,7 +79,7 @@ class Problem7(IProblem):
             str: The name of the function in the problem that is expected
             to be implemented in Java.
         """
-        return "isPrimeNumber"
+        return "moneyToEnglish"
 
     def get_ruby_function_name(self) -> str:
         """
@@ -105,36 +87,78 @@ class Problem7(IProblem):
             str: The name of the function in the problem that is expected
             to be implemented in Ruby.
         """
-        return "is_prime_number"
+        return "money_to_english"
 
     def get_test_function(self) -> callable:
-        """
-        Returns a function that tests if a given function is working correctly.
 
-        Returns:
-            callable: A function that takes a function as an argument and returns
-            a list containing the result of the test for each test case.
-        """
-
-        def is_prime_number(n: int) -> bool:
+        def money_to_english(amount: float) -> str:
             """
-            Returns True if n is a prime number, False otherwise.
-            A prime number is a natural number greater than 1 that has no positive divisors
-            other than 1 and itself.
+            Converts a monetary amount to its English word representation.
 
-            This function uses the square root optimization to check if a number is prime.
-            Time complexity: O(sqrt(n))
+            Args:
+                amount: The monetary amount to convert.
+
+            Returns:
+                str: The English words representation of the amount.
             """
-            if n <= 1:
-                return False
+            if not isinstance(amount, (int, float)) or amount < 0:
+                return "Invalid amount"
+            
+            def number_to_words(num: int) -> str:
+                ones = [
+                    "Zero", "One", "Two", "Three", "Four", 
+                    "Five", "Six", "Seven", "Eight", "Nine"
+                ]
+                tens = [
+                    "", "", "Twenty", "Thirty", "Forty", 
+                    "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+                ]
+                teens = [
+                    "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", 
+                    "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+                ]
 
-            for i in range(2, int(n**0.5) + 1):
-                if n % i == 0:
-                    return False
+                def below_hundred(n):
+                    if n < 10:
+                        return ones[n]
+                    elif n < 20:
+                        return teens[n - 10]
+                    else:
+                        return tens[n // 10] + (" " + ones[n % 10] if n % 10 != 0 else "")
 
-            return True
+                def below_thousand(n):
+                    if n < 100:
+                        return below_hundred(n)
+                    else:
+                        return ones[n // 100] + " Hundred" + (
+                            " " + below_hundred(n % 100) if n % 100 != 0 else ""
+                        )
 
-        return is_prime_number
+                if num == 0:
+                    return "Zero"
+
+                parts = []
+                if num >= 1_000:
+                    parts.append(below_thousand(num // 1_000) + " Thousand")
+                    num %= 1_000
+                if num > 0:
+                    parts.append(below_thousand(num))
+                
+                return " ".join(parts)
+
+            dollars = int(amount)
+            cents = int(round((amount - dollars) * 100))
+            
+            dollar_part = number_to_words(dollars) + " Dollar" + ("s" if dollars != 1 else "")
+            cent_part = (
+                " and " + number_to_words(cents) + " Cent" + ("s" if cents != 1 else "")
+                if cents > 0
+                else ""
+            )
+            
+            return dollar_part + cent_part
+
+        return money_to_english
 
     def get_metadata(self) -> dict:
         """
@@ -150,7 +174,7 @@ class Problem7(IProblem):
         """
 
         return {
-            "allow_recursion": False,
+            "allow_recursion": True,
             "disallowed_keywords": ["__builtins__", "while"],
         }
 
@@ -163,7 +187,7 @@ class Problem7(IProblem):
             str: The initial Python code for the problem.
         """
         return (
-            "def is_prime_number(n: int) -> bool:\n"
+            "def money_to_english(amount: float) -> bool:\n"
             "    # Your code goes here\n"
             "    return None\n"
         )
@@ -176,19 +200,19 @@ class Problem7(IProblem):
             str: The initial Java code for the problem.
         """
         return (
-            "public static boolean isPrimeNumber(int n) {\n"
+            "public static String moneyToEnglish(float amount) {\n"
             "    // Your code goes here\n"
-            "    return false;\n"
+            "    return null;\n"
             "}\n"
         )
 
     def get_testing_java_code(self) -> str:
         return (
             "package app.temp;\n\n"
-            "public class isPrimeNumber {\n"
+            "public class moneyToEnglish {\n"
             "    public static void main(String[] args) {      \n"
-            "        int n = Integer.parseInt(args[0]);        \n"
-            "        boolean result = isPrimeNumber(n);\n"
+            "        float amount = Float.parseFloat(args[0]);        \n"
+            "        String result = moneyToEnglish(amount);\n"
             "        System.out.println(result);\n"
             "    }\n\n"
         )
@@ -201,19 +225,21 @@ class Problem7(IProblem):
             str: The initial Ruby code for the problem.
         """
         return (
-            "def is_prime_number(n)\n"
+            "def money_to_english(amount)\n"
             "    # Your code goes here\n"
-            "    return false\n"
+            "    return nil\n"
             "end\n"
         )
 
     def get_testing_ruby_code(self) -> str:
         return (
-            "input = ARGV[0].to_i\n" "result = is_prime_number(input)\n" "puts result\n"
+            "input = ARGV[0].to_i\n" 
+            "result = money_to_english(input)\n" 
+            "puts result\n"
         )
 
     def is_boolean(self):
-        return True
+        return False
 
     def is_integer(self):
         return False

@@ -30,8 +30,7 @@ class Problem8(IProblem):
         """
         return (
             "Escribe una función que determine si un número entero positivo "
-            "es un número perfecto. Un número perfecto es aquel cuya suma de "
-            "sus divisores propios (excluyendo el número mismo) es igual al número."
+            "es un número perfecto."
         )
     
     def get_detailed_problem_description(self) -> str:
@@ -175,3 +174,4 @@ class Problem8(IProblem):
     
     def is_integer(self) -> bool:
         return False
+    

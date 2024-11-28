@@ -11,21 +11,19 @@ the result of the test.
 
 The app also uses a problem solver module to run the user's code and check if the code is correct.
 """
-
-from flask import Flask
 from app import create_app
 from app.routes import register_routes
 
-def run():
-    """
-    Runs the Flask app on host 0.0.0.0 and port 8080.
+class RunApp:
+    def __init__(self):
+        """
+        Runs the Flask app on host 0.0.0.0 and port 8080.
 
-    This function is the main entry point for the application.
-    """
-    app: Flask = create_app()
-    register_routes(app)
-    app.run(host="0.0.0.0", port=8080, debug=True)
-
+        This function is the main entry point for the application.
+        """
+        self.app = create_app()
+        register_routes(self.app)
+        self.app.run(host="0.0.0.0", port=8080, debug=True)
 
 if __name__ == "__main__":
-    run()
+    RunApp()

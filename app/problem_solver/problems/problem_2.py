@@ -266,3 +266,4 @@ class Problem2(IProblem):
     
     def is_integer(self):
         return False
+    

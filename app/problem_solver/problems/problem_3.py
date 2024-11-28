@@ -251,3 +251,4 @@ class Problem3(IProblem):
     
     def is_integer(self):
         return False
+    

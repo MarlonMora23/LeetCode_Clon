@@ -228,3 +228,4 @@ class IProblem(ABC):
             bool: True if the problem is an integer problem, False otherwise.
         """
         pass
+    

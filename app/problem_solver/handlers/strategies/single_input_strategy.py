@@ -11,7 +11,7 @@ class SingleInputStrategy(IBaseTestStrategy):
         test_list = problem.get_test_list() if not submit else problem.get_submission_test_list()
         try:
             for test_number in test_list:
-                if type(test_number) is str or type(test_number) is int:
+                if type(test_number) is str or type(test_number) is int or type(test_number) is float:
                     result = handler.execute(problem, test_number)
 
                 if type(test_number) is list:

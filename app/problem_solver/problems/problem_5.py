@@ -191,4 +191,5 @@ class Problem5(IProblem):
     
     def is_integer(self) -> bool:
         return True
+    
 
