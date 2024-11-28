@@ -7,6 +7,10 @@ from app.problem_solver.problems.problem_3 import Problem3
 from app.problem_solver.problems.problem_4 import Problem4
 from app.problem_solver.problems.problem_5 import Problem5
 from app.problem_solver.problems.problem_6 import Problem6
+from app.problem_solver.problems.problem_7 import Problem7
+from app.problem_solver.problems.problem_8 import Problem8
+from app.problem_solver.problems.problem_9 import Problem9
+from app.problem_solver.problems.problem_10 import Problem10
 from app.problem_solver.models.user_submission import UserSubmission
 from app.problem_solver.testing.code_tester import CodeTester
 
@@ -31,7 +35,7 @@ def get_problems() -> dict:
     Returns:
         dict: A dictionary of IProblem instances.
     """
-    return {1: Problem1(), 2: Problem2(), 3: Problem3(), 4: Problem4(), 5: Problem5(), 6: Problem6()}
+    return {1: Problem1(), 2: Problem2(), 3: Problem3(), 4: Problem4(), 5: Problem5(), 6: Problem6(), 7: Problem7(), 8: Problem8(), 9: Problem9(), 10: Problem10()}
 
 
 def get_problem(problem_id: int) -> IProblem:
